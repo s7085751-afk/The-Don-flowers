@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Don Flowers | Premium Flower Delivery Kenya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-warm: #F9F7F4; --dusty-rose: #D4A5A5; --soft-lavender: #C5B9E0;
+            --deep-mauve: #8B5A8C; --navy: #1E3A5F; --mpesa-green: #00A650;
+            --text-dark: #2D2D2D; --text-light: #666; --white: #FFFFFF;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08); --shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-warm); color: var(--text-dark); line-height: 1.6; }
+        
+        /* Nav */
+        nav { position: fixed; top: 0; width: 100%; background: rgba(249,247,244,0.98); backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo-3 { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .logo-3-icon { width: 40px; height: 40px; }
+        .logo-3-the { font-size: 0.7rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 2px; }
+        .logo-3-don { font-family: 'Montserrat'; font-weight: 800; font-size: 1.6rem; color: var(--navy); letter-spacing: -1px; }
+        .logo-3-flowers { font-family: 'Montserrat'; font-weight: 600; font-size: 1.1rem; color: var(--deep-mauve); letter-spacing: 3px; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; margin-left: auto; margin-right: 1.5rem; }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--deep-mauve); }
+        
+        /* Cart */
+        .cart-icon { position: relative; cursor: pointer; padding: 0.5rem; display: inline-block; }
+        .cart-icon svg { width: 28px; height: 28px; stroke: var(--navy); fill: none; stroke-width: 2; }
+        .cart-count { position: absolute; top: 0; right: 0; background: var(--deep-mauve); color: white; font-size: 0.7rem; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-warm); }
+        .cart-dropdown { display: none; position: absolute; top: 100%; right: 0; background: white; width: 350px; border-radius: 12px; box-shadow: var(--shadow-hover); margin-top: 1rem; padding: 1.5rem; z-index: 1001; }
+        .cart-dropdown.active { display: block; }
+        .cart-item-mini { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #eee; align-items: center; }
+        .cart-item-mini img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        .cart-item-name { font-weight: 600; font-size: 0.9rem; color: var(--navy); }
+        .cart-item-price { color: var(--deep-mauve); font-size: 0.85rem; font-weight: 600; }
+        .cart-dropdown-total { display: flex; justify-content: space-between; margin: 1rem 0; padding-top: 1rem; border-top: 2px solid var(--dusty-rose); font-weight: 700; font-size: 1.1rem; }
+        .checkout-btn { width: 100%; padding: 0.75rem; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .checkout-btn:hover { background: #128C7E; }
+        .mobile-menu { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
+        .mobile-menu span { width: 25px; height: 3px; background: var(--deep-mauve); }
+        
+        /* Hero */
+        .hero { margin-top: 80px; padding: 3rem 2rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .hero-content { text-align: center; margin-bottom: 3rem; }
+        .hero-content h1 { font-family: 'Playfair Display'; font-size: 3rem; color: var(--navy); line-height: 1.2; margin-bottom: 1rem; }
+        .hero-content h1 span { color: var(--deep-mauve); }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-light); max-width: 600px; margin: 0 auto 2rem; }
+        .hero-badges { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .hero-badge { display: flex; align-items: center; gap: 0.5rem; background: white; padding: 0.75rem 1.5rem; border-radius: 50px; box-shadow: var(--shadow); font-size: 0.9rem; font-weight: 500; }
+        .hero-badge-icon { width: 24px; height: 24px; background: var(--mpesa-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8rem; }
+        
+        /* ===== EXPANDABLE FOLDERS ===== */
+        .categories-section { margin-top: 2rem; }
+        .categories-title { font-family: 'Playfair Display'; font-size: 1.5rem; color: var(--navy); margin-bottom: 1.5rem; text-align: center; }
+        .categories-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; transition: all 0.5s ease; }
+        .category-folder { position: relative; border-radius: 16px; overflow: hidden; height: 200px; cursor: pointer; transition: all 0.4s ease; box-shadow: var(--shadow); background: white; }
+        .category-folder:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .category-folder.expanded { grid-column: 1 / -1; height: auto; cursor: default; border-radius: 20px; }
+        .category-folder-header { position: relative; height: 200px; overflow: hidden; }
+        .category-folder.expanded .category-folder-header { height: 120px; border-radius: 20px 20px 0 0; }
+        .category-folder-header img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .category-folder:hover .category-folder-header img { transform: scale(1.1); }
+        .category-folder.expanded:hover .category-folder-header img { transform: scale(1); }
+        .category-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding: 1.5rem 1rem 1rem; color: white; display: flex; justify-content: space-between; align-items: flex-end; }
+        .category-name { font-family: 'Montserrat'; font-weight: 700; font-size: 1.2rem; }
+        .category-count { font-size: 0.85rem; opacity: 0.9; }
+        .category-close-btn { display: none; background: white; color: var(--navy); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; font-weight: bold; align-items: center; justify-content: center; }
+        .category-folder.expanded .category-close-btn { display: flex; }
+        .category-folder.expanded .category-count { display: none; }
+        
+        .folder-content { display: none; padding: 2rem; background: white; border-radius: 0 0 20px 20px; }
+        .category-folder.expanded .folder-content { display: block; animation: fadeInUp 0.4s ease; }
+        .folder-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .folder-title { font-family: 'Playfair Display'; font-size: 1.5rem; color: var(--navy); }
+        .folder-back-btn { background: var(--bg-warm); border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-weight: 600; color: var(--deep-mauve); transition: all 0.3s ease; }
+        .folder-back-btn:hover { background: var(--dusty-rose); color: white; }
+        .folder-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        .folder-product-card { background: var(--bg-warm); border-radius: 12px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
+        .folder-product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .folder-product-img { width: 100%; height: 160px; object-fit: cover; display: block; }
+        .folder-product-info { padding: 1rem; }
+        .folder-product-name { font-family: 'Playfair Display'; font-size: 1rem; color: var(--navy); margin-bottom: 0.25rem; }
+        .folder-product-price { font-weight: 700; color: var(--deep-mauve); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .folder-product-add { width: 100%; padding: 0.5rem; background: var(--deep-mauve); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease; }
+        .folder-product-add:hover { background: var(--dusty-rose); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .categories-grid.has-expanded .category-folder:not(.expanded) { opacity: 0.4; pointer-events: none; transform: scale(0.95); }
+        
+        /* Featured Products */
+        .products { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-header h2 { font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--navy); margin-bottom: 1rem; }
+        .section-header p { color: var(--text-light); font-size: 1.1rem; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .product-image { width: 100%; height: 280px; object-fit: cover; display: block; }
+        .product-info { padding: 1.5rem; }
+        .product-category { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 0.25rem 0.75rem; border-radius: 20px; margin-bottom: 0.5rem; color: white; }
+        .product-category.romance { background: #E74C3C; }
+        .product-category.birthday { background: #F39C12; }
+        .product-category.sympathy { background: var(--navy); }
+        .product-category.justbecause { background: var(--soft-lavender); color: var(--navy); }
+        .product-name { font-family: 'Playfair Display'; font-size: 1.3rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .product-description { color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem; }
+        .size-options { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .size-btn { padding: 0.4rem 0.8rem; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s ease; flex: 1; min-width: 70px; }
+        .size-btn.active { background: var(--dusty-rose); color: white; border-color: var(--dusty-rose); }
+        .size-details { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.75rem; padding: 0.5rem; background: var(--bg-warm); border-radius: 8px; min-height: 40px; }
+        .size-details strong { color: var(--deep-mauve); }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; }
+        .product-price { font-size: 1.3rem; font-weight: 700; color: var(--deep-mauve); }
+        .add-to-cart-btn { background: var(--deep-mauve); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .add-to-cart-btn:hover { background: var(--dusty-rose); transform: scale(1.05); }
+        
+        /* Features */
+        .features { background: white; padding: 4rem 2rem; margin: 2rem 0; }
+        .features-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; }
+        .feature { text-align: center; padding: 1.5rem; }
+        .feature-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--dusty-rose), var(--soft-lavender)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; }
+        .feature h3 { font-family: 'Playfair Display'; font-size: 1.2rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .feature p { color: var(--text-light); font-size: 0.9rem; }
+        
+        /* Payment */
+.payment-section { padding: 3rem 2rem; max-width: 500px; margin: 0 auto; text-align: center; }
+.mpesa-card-new { background: white; border: 2px solid var(--mpesa-green); color: var(--text-dark); padding: 2rem; border-radius: 16px; box-shadow: var(--shadow); }
+.mpesa-title { color: var(--mpesa-green); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.mpesa-subtitle {color: var(--text-dark); font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; }
+.mpesa-number { color: var(--text-dark); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 0.5rem; }
+.mpesa-name { color: var(--text-light); font-style: italic; font-size: 1rem; font-weight: 500; margin-bottom: 1rem; }
+.mpesa-divider { border: none; height: 1px; background: #ddd; margin: 1rem 0; }
+.mpesa-instruction {  color: var(--text-dark); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
+.mpesa-whatsapp-btn { display: inline-block; background: #25D366; color: white; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1rem;transition: all 0.3s ease; }
+.mpesa-whatsapp-btn:hover { background: #128C7E; transform: scale(1.05); }
+        /* WhatsApp Float */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); cursor: pointer; z-index: 999; transition: all 0.3s ease; text-decoration: none; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        .whatsapp-float svg { width: 32px; height: 32px; fill: white; }
+        .whatsapp-tooltip { position: absolute; right: 70px; background: white; color: var(--text-dark); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; white-space: nowrap; opacity: 0; transition: opacity 0.3s ease; box-shadow: var(--shadow); font-weight: 500; }
+        .whatsapp-float:hover .whatsapp-tooltip { opacity: 1; }
+        
+        /* Footer */
+        footer { background: var(--navy); color: white; padding: 3rem 2rem 1.5rem; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h4 { font-family: 'Playfair Display'; font-size: 1.2rem; margin-bottom: 1rem; color: var(--dusty-rose); }
+        .footer-section p, .footer-section a { color: rgba(255,255,255,0.8); text-decoration: none; line-height: 1.8; font-size: 0.9rem; }
+        .footer-section a:hover { color: var(--dusty-rose); }
+        .footer-bottom { text-align: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu { display: flex; }
+            .hero-content h1 { font-size: 2rem; }
+            .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .category-folder { height: 150px; }
+            .category-folder.expanded { grid-column: 1 / -1; }
+            .category-folder-header { height: 150px; }
+            .category-folder.expanded .category-folder-header { height: 100px; }
+            .folder-products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .products-grid { grid-template-columns: 1fr; }
+            .cart-dropdown { width: 300px; right: -50px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo-3">
+                <div class="logo-3-icon">
+                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#D4A5A5;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#8B5A8C;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="20" cy="20" r="18" fill="url(#logoGrad)"/>
+                        <path d="M20 10 Q15 20 20 30 Q25 20 20 10" fill="white" opacity="0.9"/>
+                        <circle cx="20" cy="20" r="5" fill="white"/>
+                    </svg>
+                </div>
+                <div class="logo-3-text">
+                    <span class="logo-3-the">The</span>
+                    <span class="logo-3-don">DON</span>
+                    <span class="logo-3-flowers">Flowers</span>
+                </div>
+            </a>
+
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#categories">Shop</a></li>
+                    <li><a href="#features">Why Us</a></li>
+                    <li><a href="#payment">Payment</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                
+                <div class="cart-icon" onclick="toggleCart(event)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 6h15l-1.5 9h-12z"/>
+                        <circle cx="9" cy="20" r="1.5"/>
+                        <circle cx="18" cy="20" r="1.5"/>
+                        <path d="M6 6L5 3H2"/>
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                    
+                    <div class="cart-dropdown" id="cartDropdown">
+                        <h3>Your Cart</h3>
+                        <div id="cartItemsMini">
+                            <p style="color: #999; text-align: center; padding: 2rem 0;">Your cart is empty</p>
+                        </div>
+                        <div class="cart-dropdown-total">
+                            <span>Total:</span>
+                            <span id="cartTotalMini">KES 0</span>
+                        </div>
+                        <button class="checkout-btn" onclick="checkoutWhatsApp()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            Order on WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Premium Flowers, <span>Delivered Kenya-wide</span></h1>
+            <p class="hero-subtitle">Based in Karen, Nairobi. Fresh bouquets from KES 2,500. Free delivery on orders above KES 15,000.</p>
+            
+            <div class="hero-badges">
+                <div class="hero-badge">
+                    <div class="hero-badge-icon">M</div>
+                    <span>M-Pesa Accepted</span>
+                </div>
+                <div class="hero-badge">
+                    <div class="hero-badge-icon" style="background: var(--dusty-rose);">★</div>
+                    <span>4.9/5 Rating</span>
+                </div>
+                <div class="hero-badge">
+                    <div class="hero-badge-icon" style="background: var(--navy);">🚚</div>
+                    <span>Countrywide Delivery</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== EXPANDABLE FOLDER CATEGORIES ===== -->
+    <section class="categories-section" id="categories">
+        <h2 class="categories-title">Shop by Occasion</h2>
+        <div class="categories-grid" id="categoriesGrid">
+            
+            <!-- Birthday Folder -->
+            <div class="category-folder" id="folder-birthday" data-category="birthday">
+                <div class="category-folder-header" onclick="openFolder('birthday')">
+                    <img src="SCREENSHOTS/PHOTO 6.jpg" alt="Birthday Flowers">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">🎂 Birthday</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('birthday')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Birthday Flowers</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('birthday')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-birthday">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Romance Folder -->
+            <div class="category-folder" id="folder-romance" data-category="romance">
+                <div class="category-folder-header" onclick="openFolder('romance')">
+                    <img src="SCREENSHOTS/PHOTO 28.jpg" alt="Romance Flowers">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">❤️ Romance</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('romance')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Romance Flowers</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('romance')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-romance">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sympathy Folder -->
+            <div class="category-folder" id="folder-sympathy" data-category="sympathy">
+                <div class="category-folder-header" onclick="openFolder('sympathy')">
+                    <img src="SCREENSHOTS/PHOTO 45.jpg" alt="Sympathy Flowers">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">🕊️ Sympathy</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('sympathy')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Sympathy Flowers</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('sympathy')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-sympathy">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Just Because Folder -->
+            <div class="category-folder" id="folder-justbecause" data-category="justbecause">
+                <div class="category-folder-header" onclick="openFolder('justbecause')">
+                    <img src="SCREENSHOTS/PHOTO 73.jpg" alt="Just Because Flowers">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">✨ Just Because</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('justbecause')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Just Because Flowers</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('justbecause')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-justbecause">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- Featured Products Section -->
+    <section class="products" id="products">
+        <div class="section-header">
+            <h2>Featured Collection</h2>
+            <p>Our most popular handcrafted bouquets</p>
+        </div>
+        
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" data-id="1">
+                <img src="SCREENSHOTS/PHOTO 73.jpg" alt="Classic Red Roses" class="product-image">
+                <div class="product-info">
+                    <span class="product-category romance">Romance</span>
+                    <h3 class="product-name">Classic Red Roses</h3>
+                    <p class="product-description">Premium red roses with eucalyptus</p>
+                    <div class="size-options">
+                        <button class="size-btn active" onclick="selectSize(this, 1, 'standard')">Standard</button>
+                        <button class="size-btn" onclick="selectSize(this, 1, 'deluxe')">Deluxe</button>
+                        <button class="size-btn" onclick="selectSize(this, 1, 'premium')">Premium</button>
+                    </div>
+                    <div class="size-details" id="details-1"><strong>Standard:</strong> 12 stems + basic wrapping</div>
+                    <div class="product-footer">
+                        <div class="product-price">KES <span class="price-display" id="price-1">3,500</span></div>
+                        <button class="add-to-cart-btn" onclick="addToCart(1)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card" data-id="2">
+                <img src="SCREENSHOTS/PHOTO 6.jpg" alt="Sunshine Mix" class="product-image">
+                <div class="product-info">
+                    <span class="product-category birthday">Birthday</span>
+                    <h3 class="product-name">Sunshine Mix</h3>
+                    <p class="product-description">Sunflowers, gerberas, yellow roses</p>
+                    <div class="size-options">
+                        <button class="size-btn active" onclick="selectSize(this, 2, 'standard')">Standard</button>
+                        <button class="size-btn" onclick="selectSize(this, 2, 'deluxe')">Deluxe</button>
+                        <button class="size-btn" onclick="selectSize(this, 2, 'premium')">Premium</button>
+                    </div>
+                    <div class="size-details" id="details-2"><strong>Standard:</strong> 5 sunflowers + 3 gerberas</div>
+                    <div class="product-footer">
+                        <div class="product-price">KES <span class="price-display" id="price-2">2,800</span></div>
+                        <button class="add-to-cart-btn" onclick="addToCart(2)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-id="3">
+                <img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&auto=format&fit=crop&q=80" alt="White Elegance" class="product-image">
+                <div class="product-info">
+                    <span class="product-category sympathy">Sympathy</span>
+                    <h3 class="product-name">White Elegance</h3>
+                    <p class="product-description">Pure white lilies and roses</p>
+                    <div class="size-options">
+                        <button class="size-btn active" onclick="selectSize(this, 3, 'standard')">Standard</button>
+                        <button class="size-btn" onclick="selectSize(this, 3, 'deluxe')">Deluxe</button>
+                        <button class="size-btn" onclick="selectSize(this, 3, 'premium')">Premium</button>
+                    </div>
+                    <div class="size-details" id="details-3"><strong>Standard:</strong> 6 white lilies + 6 roses</div>
+                    <div class="product-footer">
+                        <div class="product-price">KES <span class="price-display" id="price-3">4,200</span></div>
+                        <button class="add-to-cart-btn" onclick="addToCart(3)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-id="4">
+                <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&auto=format&fit=crop&q=80" alt="Pastel Dreams" class="product-image">
+                <div class="product-info">
+                    <span class="product-category justbecause">Just Because</span>
+                    <h3 class="product-name">Pastel Dreams</h3>
+                    <p class="product-description">Soft pink and lavender mix</p>
+                    <div class="size-options">
+                        <button class="size-btn active" onclick="selectSize(this, 4, 'standard')">Standard</button>
+                        <button class="size-btn" onclick="selectSize(this, 4, 'deluxe')">Deluxe</button>
+                        <button class="size-btn" onclick="selectSize(this, 4, 'premium')">Premium</button>
+                    </div>
+                    <div class="size-details" id="details-4"><strong>Standard:</strong> 10 mixed stems + greenery</div>
+                    <div class="product-footer">
+                        <div class="product-price">KES <span class="price-display" id="price-4">3,200</span></div>
+                        <button class="add-to-cart-btn" onclick="addToCart(4)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-id="5">
+                <img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=600&auto=format&fit=crop&q=80" alt="Pink Passion" class="product-image">
+                <div class="product-info">
+                    <span class="product-category romance">Romance</span>
+                    <h3 class="product-name">Pink Passion</h3>
+                    <p class="product-description">Pink roses, peonies, orchids</p>
+                    <div class="size-options">
+                        <button class="size-btn active" onclick="selectSize(this, 5, 'standard')">Standard</button>
+                        <button class="size-btn" onclick="selectSize(this, 5, 'deluxe')">Deluxe</button>
+                        <button class="size-btn" onclick="selectSize(this, 5, 'premium')">Premium</button>
+                    </div>
+                    <div class="size-details" id="details-5"><strong>Standard:</strong> 10 pink roses + 2 orchids</div>
+                    <div class="product-footer">
+                        <div class="product-price">KES <span class="price-display" id="price-5">4,800</span></div>
+                        <button class="add-to-cart-btn" onclick="addToCart(5)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-id="6">
+                <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&auto=format&fit=crop&q=80" alt="Tropical Burst" class="product-image">
+                <div class="product-info">
+                    <span class="product-category birthday">Birthday</span>
+                    <h3 class="product-name">Tropical Burst</h3>
+                    <p class="product-description">Birds of paradise, anthuriums</p>
+                    <div class="size-options">
+                        <button class="size-btn active" onclick="selectSize(this, 6, 'standard')">Standard</button>
+                        <button class="size-btn" onclick="selectSize(this, 6, 'deluxe')">Deluxe</button>
+                        <button class="size-btn" onclick="selectSize(this, 6, 'premium')">Premium</button>
+                    </div>
+                    <div class="size-details" id="details-6"><strong>Standard:</strong> 3 birds + 3 anthuriums</div>
+                    <div class="product-footer">
+                        <div class="product-price">KES <span class="price-display" id="price-6">5,500</span></div>
+                        <button class="add-to-cart-btn" onclick="addToCart(6)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>Why Choose The Don Flowers?</h2>
+            <p>Your trusted florist in Karen, delivering happiness across Kenya</p>
+        </div>
+        <div class="features-container">
+            <div class="feature">
+                <div class="feature-icon">🌸</div>
+                <h3>Freshness Guaranteed</h3>
+                <p>Every bloom hand-selected daily from local growers. Not fresh? We'll replace it free.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🚚</div>
+                <h3>Countrywide Delivery</h3>
+                <p>From Nairobi to Mombasa, Kisumu to Nakuru. We deliver across all 47 counties.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <h3>Free Delivery</h3>
+                <p>Enjoy free delivery on all orders above KES 15,000. Affordable rates for smaller orders.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Easy Ordering</h3>
+                <p>Order via WhatsApp or M-Pesa. No complicated apps or registration required.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment -->
+    <section class="payment-section" id="payment">
+        <div class="section-header">
+            <h2>Secure Payment</h2>
+            <p>Pay instantly with M-Pesa</p>
+        </div>
+                </a>
+                <div class="mpesa-card-new">
+    <div class="mpesa-header">
+        <span class="mpesa-title">M-Pesa</span>
+    </div>
+    <h3 class="mpesa-subtitle">Pay via M-Pesa</h3>
+    <div class="mpesa-number">0700 354 081</div>
+    <p class="mpesa-name">Name: Lawreyne Mueni</p>
+    <hr class="mpesa-divider">
+    <p class="mpesa-instruction">Please send the payment then share the confirmation message via WhatsApp.</p>
+    <a href="https://wa.me/254700354081" class="mpesa-whatsapp-btn" target="_blank">Confirm via WhatsApp</a>
+</div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/254700354081?text=Hi%20The%20Don%20Flowers!%20I'd%20like%20to%20place%20an%20order." class="whatsapp-float" target="_blank">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <div class="whatsapp-tooltip">Order on WhatsApp</div>
+    </a>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>The Don Flowers</h4>
+                <p>Premium flower delivery service based in Karen, Nairobi. Delivering fresh happiness across all 47 counties in Kenya.</p>
+                <br>
+                <p><strong>Address:</strong><br>The Hub Karen, Ground Floor<br>Karen, Nairobi 00502</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#categories">Shop by Occasion</a><br>
+                <a href="#products">Featured Collection</a><br>
+                <a href="#features">Why Choose Us</a><br>
+                <a href="#payment">Payment Options</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p>📞 <a href="tel:+254700354081">+254 700 354 081</a></p>
+                <p>📧 <a href="mailto:lawreynemueni048@gmail.com">lawreynemueni048@gmail.com</a></p>
+                <p>💬 <a href="https://wa.me/254700354081">WhatsApp: +254 700 354 081</a></p>
+                <br>
+                <p><strong>Hours:</strong><br>Mon-Sat: 8:00 AM - 6:00 PM<br>Sunday: 9:00 AM - 4:00 PM</p>
+            </div>
+            <div class="footer-section">
+                <h4>Delivery Information</h4>
+                <p><strong>Free Delivery:</strong> Orders above KES 15,000</p>
+                <p><strong>Countrywide:</strong> 1-2 business days</p>
+                <br>
+                <p>We deliver to all 47 counties including:<br>Nairobi • Mombasa • Kisumu • Nakuru • Eldoret • Meru • Machakos</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 The Don Flowers. All rights reserved. | Fresh flowers, delivered with love across Kenya.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== FOLDER PRODUCTS DATA =====
+        // Each category has 20 sample products (you can add more)
+        const folderProducts = {
+            birthday: [
+                { name: "Sunshine Mix", price: 2800, image: "SCREENSHOTS/PHOTO 1.jpg"},
+                { name: "Tropical Burst", price: 5500, image: "SCREENSHOTS/PHOTO 2.jpg" },
+                { name: "Birthday Bliss", price: 3200, image: "SCREENSHOTS/PHOTO 3.jpg" },
+                { name: "Candy Carnival", price: 4500, image: "SCREENSHOTS/PHOTO 4.jpg" },
+                { name: "Golden Celebration", price: 3800, image: "SCREENSHOTS/PHOTO 5.jpg" },
+                { name: "Party Popper", price: 2900, image: "SCREENSHOTS/PHOTO 6.jpg" },
+                { name: "Sweet Sixteen", price: 5200, image: "SCREENSHOTS/PHOTO 7.jpg" },
+                { name: "Balloon Bloom", price: 3500, image: "SCREENSHOTS/PHOTO 8.jpg" },
+                { name: "Cake Companion", price: 4200, image: "SCREENSHOTS/PHOTO 9.jpg" },
+                { name: "Festive Fiesta", price: 4800, image: "SCREENSHOTS/PHOTO 10.jpg" },
+                { name: "Happy Day", price: 2600, image: "SCREENSHOTS/PHOTO 11.jpg" },
+                { name: "Joyful Bunch", price: 3100, image: "SCREENSHOTS/PHOTO 12.jpg" },
+                { name: "Birthday Queen", price: 6500, image: "SCREENSHOTS/PHOTO 13.jpg" },
+                { name: "Cheerful Charm", price: 3400, image: "SCREENSHOTS/PHOTO 14.jpg" },
+                { name: "Surprise Box", price: 5800, image: "SCREENSHOTS/PHOTO 15.jpg" },
+                { name: "Vibrant Wishes", price: 3900, image: "SCREENSHOTS/PHOTO 16.jpg" },
+                { name: "Magic Moment", price: 7200, image: "SCREENSHOTS/PHOTO 17.jpg" },
+                { name: "Rainbow Joy", price: 4300, image: "SCREENSHOTS/PHOTO 18.jpg" },
+                { name: "Star Shine", price: 3600, image: "SCREENSHOTS/PHOTO 19.jpg" },
+                { name: "Wish Maker", price: 4900, image: "SCREENSHOTS/PHOTO 20.jpg" }
+            ],
+            romance: [
+                { name: "Classic Red Roses", price: 3500, image: "SCREENSHOTS/PHOTO 21.jpg" },
+                { name: "Pink Passion", price: 4800, image: "SCREENSHOTS/PHOTO 22.jpg" },
+                { name: "Love Letter", price: 5200, image: "SCREENSHOTS/PHOTO 23.jpg" },
+                { name: "Heartstrings", price: 4200, image: "SCREENSHOTS/PHOTO 24.jpg" },
+                { name: "Forever Yours", price: 6800, image: "SCREENSHOTS/PHOTO 25.jpg" },
+                { name: "Sweetheart", price: 3100, image: "SCREENSHOTS/PHOTO 26.jpg" },
+                { name: "Amour", price: 7500, image: "SCREENSHOTS/PHOTO 27.jpg" },
+                { name: "Rose Garden", price: 5500, image: "SCREENSHOTS/PHOTO 28.jpg" },
+                { name: "True Love", price: 8900, image: "SCREENSHOTS/PHOTO 29.jpg" },
+                { name: "Velvet Kiss", price: 4600, image: "SCREENSHOTS/PHOTO 30.jpg" },
+                { name: "Cherish", price: 5800, image: "SCREENSHOTS/PHOTO 31.jpg" },
+                { name: "Devotion", price: 7200, image: "SCREENSHOTS/PHOTO 32.jpg" },
+                { name: "Eternal Flame", price: 9500, image: "SCREENSHOTS/PHOTO 33.jpg" },
+                { name: "Romance Box", price: 6500, image: "SCREENSHOTS/PHOTO 34.jpg" },
+                { name: "Bliss", price: 3800, image: "SCREENSHOTS/PHOTO 35.jpg" },
+                { name: "Adore", price: 8200, image: "SCREENSHOTS/PHOTO 36.jpg" },
+                { name: "Passion", price: 4900, image: "SCREENSHOTS/PHOTO 37.jpg" },
+                { name: "Heartbeat", price: 5600, image: "SCREENSHOTS/PHOTO 38.jpg" },
+                { name: "Soulmate", price: 11000, image: "SCREENSHOTS/PHOTO 39.jpg" },
+                { name: "Forever", price: 7800, image: "SCREENSHOTS/PHOTO 40.jpg" }
+            ],
+            sympathy: [
+                { name: "White Elegance", price: 4200, image: "SCREENSHOTS/PHOTO 41.jpg" },
+                { name: "Peaceful Rest", price: 3800, image: "SCREENSHOTS/PHOTO 42.jpg" },
+                { name: "Serenity", price: 4500, image: "SCREENSHOTS/PHOTO 43.jpg" },
+                { name: "Gentle Soul", price: 5200, image: "SCREENSHOTS/PHOTO 44.jpg" },
+                { name: "Pure Heart", price: 3600, image: "SCREENSHOTS/PHOTO 45.jpg" },
+                { name: "Comfort", price: 4800, image: "SCREENSHOTS/PHOTO 46.jpg" },
+                { name: "Memorial", price: 6500, image: "SCREENSHOTS/PHOTO 47.jpg" },
+                { name: "Tender Thoughts", price: 4100, image: "SCREENSHOTS/PHOTO 48.jpg" },
+                { name: "Grace", price: 5500, image: "SCREENSHOTS/PHOTO 49.jpg" },
+                { name: "Remembrance", price: 7200, image: "SCREENSHOTS/PHOTO 50.jpg" },
+                { name: "Dove", price: 3900, image: "SCREENSHOTS/PHOTO 51.jpg" },
+                { name: "Angelic", price: 5800, image: "SCREENSHOTS/PHOTO 52.jpg" },
+                { name: "Heavenly", price: 6800, image: "SCREENSHOTS/PHOTO 53.jpg" },
+                { name: "Tranquil", price: 4400, image: "SCREENSHOTS/PHOTO 54.jpg" },
+                { name: "Eternal Peace", price: 8500, image: "SCREENSHOTS/PHOTO 55.jpg" },
+                { name: "Soft Whisper", price: 3700, image: "SCREENSHOTS/PHOTO 56.jpg" },
+                { name: "Lily Cross", price: 9200, image: "SCREENSHOTS/PHOTO 57.jpg" },
+                { name: "Calm Waters", price: 4600, image: "SCREENSHOTS/PHOTO 58.jpg" },
+                { name: "Silent Prayer", price: 5200, image: "SCREENSHOTS/PHOTO 59.jpg" },
+                { name: "White Dove", price: 6100, image: "SCREENSHOTS/PHOTO 60.jpg" }
+            ],
+            justbecause: [
+                { name: "Pastel Dreams", price: 3200, image: "SCREENSHOTS/PHOTO 61.jpg" },
+                { name: "Thinking of You", price: 2800, image: "SCREENSHOTS/PHOTO 62.jpg" },
+                { name: "Smile Maker", price: 2400, image: "SCREENSHOTS/PHOTO 63.jpg" },
+                { name: "Bright Day", price: 3600, image: "SCREENSHOTS/PHOTO 64.jpg" },
+                { name: "Cheer Up", price: 2900, image: "SCREENSHOTS/PHOTO 65.jpg" },
+                { name: "Hello Sunshine", price: 3300, image: "SCREENSHOTS/PHOTO 66.jpg" },
+                { name: "Pick Me Up", price: 2600, image: "SCREENSHOTS/PHOTO 67.jpg" },
+                { name: "Little Joy", price: 2200, image: "SCREENSHOTS/PHOTO 68.jpg" },
+                { name: "Friendship", price: 3800, image: "SCREENSHOTS/PHOTO 69.jpg" },
+                { name: "Get Well", price: 4200, image: "SCREENSHOTS/PHOTO 70.jpg" },
+                { name: "Thank You", price: 3500, image: "SCREENSHOTS/PHOTO 71.jpg" },
+                { name: "Miss You", price: 3100, image: "SCREENSHOTS/PHOTO 72.jpg" },
+                { name: "Congratulations", price: 4800, image: "SCREENSHOTS/PHOTO 73.jpg" },
+                { name: "Good Luck", price: 2700, image: "SCREENSHOTS/PHOTO 74.jpg" },
+                { name: "Welcome Home", price: 3900, image: "SCREENSHOTS/PHOTO 75.jpg" },
+                { name: "New Baby", price: 4500, image: "SCREENSHOTS/PHOTO 76.jpg" },
+                { name: "Housewarming", price: 5200, image: "SCREENSHOTS/PHOTO 77.jpg" },
+                { name: "Anniversary", price: 5800, image: "SCREENSHOTS/PHOTO 78.jpg" },
+                { name: "Graduation", price: 3400, image: "SCREENSHOTS/PHOTO 79.jpg" },
+                { name: "Appreciation", price: 4100, image: "SCREENSHOTS/PHOTO 80.jpg" }
+            ]
+        };
+
+        // ===== FOLDER FUNCTIONS =====
+        function openFolder(category) {
+            const grid = document.getElementById('categoriesGrid');
+            const folder = document.getElementById('folder-' + category);
+            const container = document.getElementById('folder-products-' + category);
+            
+            // Close any open folder first
+            document.querySelectorAll('.category-folder').forEach(f => {
+                f.classList.remove('expanded');
+            });
+            grid.classList.remove('has-expanded');
+            
+            // Expand clicked folder
+            folder.classList.add('expanded');
+            grid.classList.add('has-expanded');
+            
+            // Populate products if not already done
+            if (!container.dataset.populated) {
+                container.innerHTML = folderProducts[category].map((p, i) => `
+                    <div class="folder-product-card">
+                        <img src="${p.image}" alt="${p.name}" class="folder-product-img">
+                        <div class="folder-product-info">
+                            <div class="folder-product-name">${p.name}</div>
+                            <div class="folder-product-price">KES ${p.price.toLocaleString()}</div>
+                            <button class="folder-product-add" onclick="addFolderProductToCart('${p.name}', ${p.price}, '${p.image}')">+ Add to Cart</button>
+                        </div>
+                    </div>
+                `).join('');
+                container.dataset.populated = 'true';
+            }
+            
+            // Scroll to folder
+            folder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeFolder(category) {
+            const grid = document.getElementById('categoriesGrid');
+            const folder = document.getElementById('folder-' + category);
+            
+            folder.classList.remove('expanded');
+            grid.classList.remove('has-expanded');
+        }
+
+        // ===== CART FUNCTIONS =====
+        let cart = [];
+        
+        function addToCart(productId) {
+            const product = featuredProducts[productId];
+            const size = selectedSizes[productId] || 'standard';
+            const sizeData = product.sizes[size];
+            
+            const cartItem = {
+                id: productId,
+                name: product.name + ' (' + size.charAt(0).toUpperCase() + size.slice(1) + ')',
+                price: sizeData.price,
+                image: product.image,
+                quantity: 1
+            };
+            
+            const existingIndex = cart.findIndex(item => item.id === productId && item.name === cartItem.name);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push(cartItem);
+            }
+            
+            updateCartUI();
+            
+            // Visual feedback
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✓ Added';
+            btn.style.background = '#00A650';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 1500);
+        }
+        
+        function addFolderProductToCart(name, price, image) {
+            const cartItem = {
+                id: 'folder_' + name.replace(/\s+/g, '_').toLowerCase(),
+                name: name,
+                price: price,
+                image: image,
+                quantity: 1
+            };
+            
+            const existingIndex = cart.findIndex(item => item.name === name);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push(cartItem);
+            }
+            
+            updateCartUI();
+            
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✓ Added';
+            btn.style.background = '#00A650';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 1500);
+        }
+        
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItemsMini = document.getElementById('cartItemsMini');
+            const cartTotalMini = document.getElementById('cartTotalMini');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            if (cart.length === 0) {
+                cartItemsMini.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem 0;">Your cart is empty</p>';
+                cartTotalMini.textContent = 'KES 0';
+                return;
+            }
+            
+            cartItemsMini.innerHTML = cart.map(item => `
+                <div class="cart-item-mini">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">KES ${item.price.toLocaleString()} x ${item.quantity}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotalMini.textContent = 'KES ' + total.toLocaleString();
+        }
+        
+        function toggleCart(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('cartDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        document.addEventListener('click', function(event) {
+            const cartIcon = document.querySelector('.cart-icon');
+            const dropdown = document.getElementById('cartDropdown');
+            if (!cartIcon.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            let message = "Hi The Don Flowers! I'd like to place an order:\\n\\n";
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name} - KES ${item.price.toLocaleString()} x ${item.quantity}\\n`;
+                total += item.price * item.quantity;
+            });
+            
+            message += `\\nTotal: KES ${total.toLocaleString()}\\n\\nPlease confirm availability. Thank you!`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/254700354081?text=${encodedMessage}`, '_blank');
+        }
+
+        function processMpesa() {
+            const phone = document.getElementById('mpesa-phone').value;
+            if (!phone || phone.length < 10) {
+                alert('Please enter a valid M-Pesa number (07XX XXX XXX)');
+                return;
+            }
+            alert(`M-Pesa STK Push sent to ${phone}\\n\\nPlease check your phone and enter your PIN to complete payment.`);
+        }
+
+        // ===== FEATURED PRODUCTS DATA =====
+        const featuredProducts = {
+            1: {
+                name: "Classic Red Roses",
+                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
+                sizes: {
+                    standard: { price: 3500, details: "12 stems + basic wrapping" },
+                    deluxe: { price: 5500, details: "24 stems + premium wrapping + greenery" },
+                    premium: { price: 8500, details: "36 stems + luxury box + chocolates" }
+                }
+            },
+            2: {
+                name: "Sunshine Mix",
+                image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?w=600&auto=format&fit=crop&q=80",
+                sizes: {
+                    standard: { price: 2800, details: "5 sunflowers + 3 gerberas" },
+                    deluxe: { price: 4500, details: "8 sunflowers + 5 gerberas + roses" },
+                    premium: { price: 7200, details: "12 sunflowers + mixed blooms + vase" }
+                }
+            },
+            3: {
+                name: "White Elegance",
+                image: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&auto=format&fit=crop&q=80",
+                sizes: {
+                    standard: { price: 4200, details: "6 white lilies + 6 roses" },
+                    deluxe: { price: 6500, details: "12 lilies + 12 roses + greenery" },
+                    premium: { price: 9500, details: "18 lilies + 18 roses + premium vase" }
+                }
+            },
+            4: {
+                name: "Pastel Dreams",
+                image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&auto=format&fit=crop&q=80",
+                sizes: {
+                    standard: { price: 3200, details: "10 mixed stems + greenery" },
+                    deluxe: { price: 5200, details: "20 mixed stems + premium wrapping" },
+                    premium: { price: 7800, details: "30+ stems + luxury arrangement" }
+                }
+            },
+            5: {
+                name: "Pink Passion",
+                image: "https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=600&auto=format&fit=crop&q=80",
+                sizes: {
+                    standard: { price: 4800, details: "10 pink roses + 2 orchids" },
+                    deluxe: { price: 7200, details: "20 roses + 5 orchids + peonies" },
+                    premium: { price: 11000, details: "30+ roses + orchids + luxury box" }
+                }
+            },
+            6: {
+                name: "Tropical Burst",
+                image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&auto=format&fit=crop&q=80",
+                sizes: {
+                    standard: { price: 5500, details: "3 birds + 3 anthuriums" },
+                    deluxe: { price: 8500, details: "6 birds + 6 anthuriums + foliage" },
+                    premium: { price: 12500, details: "10+ tropicals + ceramic vase" }
+                }
+            }
+        };
+
+        const selectedSizes = {};
+        Object.keys(featuredProducts).forEach(id => {
+            selectedSizes[id] = 'standard';
+        });
+
+        function selectSize(btn, productId, size) {
+            const card = btn.closest('.product-card');
+            const buttons = card.querySelectorAll('.size-btn');
+            
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            selectedSizes[productId] = size;
+            
+            const product = featuredProducts[productId];
+            const sizeData = product.sizes[size];
+            
+            const priceElement = card.querySelector('.price-display');
+            priceElement.style.opacity = '0';
+            setTimeout(() => {
+                priceElement.textContent = sizeData.price.toLocaleString();
+                priceElement.style.opacity = '1';
+            }, 200);
+            
+            const detailsElement = card.querySelector('.size-details');
+            detailsElement.innerHTML = `<strong>${size.charAt(0).toUpperCase() + size.slice(1)}:</strong> ${sizeData.details}`;
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
