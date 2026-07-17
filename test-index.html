@@ -13,9 +13,27 @@
             --shadow: 0 4px 20px rgba(0,0,0,0.08); --shadow-hover: 0 8px 30px rgba(0,0,0,0.12);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-warm); color: var(--text-dark); line-height: 1.6; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-warm); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
         
-        /* Nav */
+        /* ===== SCROLL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (max-width: 768px) {
+            .reveal {
+                transform: translateY(20px);
+                transition: opacity 0.4s ease, transform 0.4s ease;
+            }
+        }
+        
+        /* ===== NAV ===== */
         nav { position: fixed; top: 0; width: 100%; background: rgba(249,247,244,0.98); backdrop-filter: blur(10px); z-index: 1000; padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
         .logo-3 { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
@@ -25,24 +43,66 @@
         .logo-3-flowers { font-family: 'Montserrat'; font-weight: 600; font-size: 1.1rem; color: var(--deep-mauve); letter-spacing: 3px; text-transform: uppercase; }
         .nav-links { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; margin-left: auto; margin-right: 1.5rem; }
         .nav-right { display: flex; align-items: center; gap: 1rem; }
-        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 0.95rem; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 0.95rem; transition: color 0.3s; }
         .nav-links a:hover { color: var(--deep-mauve); }
+        
+        /* Mobile Menu */
+        .mobile-menu { display: none; flex-direction: column; gap: 4px; cursor: pointer; padding: 0.5rem; z-index: 1002; }
+        .mobile-menu span { width: 25px; height: 3px; background: var(--deep-mauve); transition: all 0.3s ease; border-radius: 2px; }
+        .mobile-menu.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        
+        .mobile-drawer {
+            position: fixed;
+            top: 0; right: -100%;
+            width: 280px; height: 100vh;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.15);
+            z-index: 1001;
+            padding: 5rem 2rem 2rem;
+            transition: right 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .mobile-drawer.active { right: 0; }
+        .mobile-drawer a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            transition: color 0.3s;
+        }
+        .mobile-drawer a:hover { color: var(--deep-mauve); }
+        .mobile-drawer-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .mobile-drawer-overlay.active { opacity: 1; pointer-events: all; }
         
         /* Cart */
         .cart-icon { position: relative; cursor: pointer; padding: 0.5rem; display: inline-block; }
         .cart-icon svg { width: 28px; height: 28px; stroke: var(--navy); fill: none; stroke-width: 2; }
         .cart-count { position: absolute; top: 0; right: 0; background: var(--deep-mauve); color: white; font-size: 0.7rem; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-warm); }
-        .cart-dropdown { display: none; position: absolute; top: 100%; right: 0; background: white; width: 350px; border-radius: 12px; box-shadow: var(--shadow-hover); margin-top: 1rem; padding: 1.5rem; z-index: 1001; }
+        .cart-dropdown { display: none; position: absolute; top: 100%; right: 0; background: white; width: 350px; border-radius: 12px; box-shadow: var(--shadow-hover); margin-top: 1rem; padding: 1.5rem; z-index: 1001; max-height: 500px; overflow-y: auto; }
         .cart-dropdown.active { display: block; }
         .cart-item-mini { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #eee; align-items: center; }
         .cart-item-mini img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+        .cart-item-info { flex: 1; }
         .cart-item-name { font-weight: 600; font-size: 0.9rem; color: var(--navy); }
         .cart-item-price { color: var(--deep-mauve); font-size: 0.85rem; font-weight: 600; }
         .cart-dropdown-total { display: flex; justify-content: space-between; margin: 1rem 0; padding-top: 1rem; border-top: 2px solid var(--dusty-rose); font-weight: 700; font-size: 1.1rem; }
-        .checkout-btn { width: 100%; padding: 0.75rem; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .checkout-btn { width: 100%; padding: 0.75rem; background: #25D366; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; min-height: 44px; transition: background 0.3s; }
         .checkout-btn:hover { background: #128C7E; }
-        .mobile-menu { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
-        .mobile-menu span { width: 25px; height: 3px; background: var(--deep-mauve); }
         
         /* Hero */
         .hero { margin-top: 80px; padding: 3rem 2rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
@@ -55,14 +115,14 @@
         .hero-badge-icon { width: 24px; height: 24px; background: var(--mpesa-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8rem; }
         
         /* ===== EXPANDABLE FOLDERS ===== */
-        .categories-section { margin-top: 2rem; }
-        .categories-title { font-family: 'Playfair Display'; font-size: 1.5rem; color: var(--navy); margin-bottom: 1.5rem; text-align: center; }
+        .categories-section { margin-top: 2rem; padding: 0 2rem; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .categories-title { font-family: 'Playfair Display'; font-size: 1.8rem; color: var(--navy); margin-bottom: 1.5rem; text-align: center; }
         .categories-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; transition: all 0.5s ease; }
         .category-folder { position: relative; border-radius: 16px; overflow: hidden; height: 200px; cursor: pointer; transition: all 0.4s ease; box-shadow: var(--shadow); background: white; }
         .category-folder:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
         .category-folder.expanded { grid-column: 1 / -1; height: auto; cursor: default; border-radius: 20px; }
         .category-folder-header { position: relative; height: 200px; overflow: hidden; }
-        .category-folder.expanded .category-folder-header { height: 120px; border-radius: 20px 20px 0 0; }
+        .category-folder.expanded .category-folder-header { height: 400px; border-radius: 20px 20px 0 0; }
         .category-folder-header img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         .category-folder:hover .category-folder-header img { transform: scale(1.1); }
         .category-folder.expanded:hover .category-folder-header img { transform: scale(1); }
@@ -75,21 +135,39 @@
         
         .folder-content { display: none; padding: 2rem; background: white; border-radius: 0 0 20px 20px; }
         .category-folder.expanded .folder-content { display: block; animation: fadeInUp 0.4s ease; }
-        .folder-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .folder-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; position: sticky; top: 80px; background: white; z-index: 10; padding: 0.5rem 0; }
         .folder-title { font-family: 'Playfair Display'; font-size: 1.5rem; color: var(--navy); }
-        .folder-back-btn { background: var(--bg-warm); border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-weight: 600; color: var(--deep-mauve); transition: all 0.3s ease; }
+        .folder-back-btn { background: var(--bg-warm); border: none; padding: 0.6rem 1.2rem; border-radius: 20px; cursor: pointer; font-weight: 600; color: var(--deep-mauve); transition: all 0.3s ease; font-size: 0.9rem; min-height: 44px; }
         .folder-back-btn:hover { background: var(--dusty-rose); color: white; }
-        .folder-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
-        .folder-product-card { background: var(--bg-warm); border-radius: 12px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; }
-        .folder-product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
-        .folder-product-img { width: 100%; height: 160px; object-fit: cover; display: block; }
-        .folder-product-info { padding: 1rem; }
-        .folder-product-name { font-family: 'Playfair Display'; font-size: 1rem; color: var(--navy); margin-bottom: 0.25rem; }
-        .folder-product-price { font-weight: 700; color: var(--deep-mauve); font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .folder-product-add { width: 100%; padding: 0.5rem; background: var(--deep-mauve); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease; }
-        .folder-product-add:hover { background: var(--dusty-rose); }
+        .folder-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .categories-grid.has-expanded .category-folder:not(.expanded) { opacity: 0.4; pointer-events: none; transform: scale(0.95); }
+        
+        /* Folder Product Card (matches Featured Collection) */
+        .folder-product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); transition: all 0.3s ease; }
+        .folder-product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .folder-product-img { width: 100%; height: 280px; object-fit: cover; display: block; }
+        .folder-product-info { padding: 1.5rem; }
+        .folder-product-category { display: inline-block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 0.25rem 0.75rem; border-radius: 20px; margin-bottom: 0.5rem; color: white; }
+        .folder-product-category.romance { background: #E74C3C; }
+        .folder-product-category.birthday { background: #F39C12; }
+        .folder-product-category.sympathy { background: var(--navy); }
+        .folder-product-category.justbecause { background: var(--soft-lavender); color: var(--navy); }
+        .folder-product-category.water { background: #3498DB; }
+        .folder-product-category.events { background: #9B59B6; }
+        .folder-product-category.boxed { background: #E67E22; }
+        .folder-product-category.baskets { background: #27AE60; }
+        .folder-product-name { font-family: 'Playfair Display'; font-size: 1.3rem; color: var(--navy); margin-bottom: 0.5rem; }
+        .folder-product-description { color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem; }
+        .folder-size-options { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .folder-size-btn { padding: 0.4rem 0.8rem; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s ease; flex: 1; min-width: 70px; min-height: 36px; }
+        .folder-size-btn.active { background: var(--dusty-rose); color: white; border-color: var(--dusty-rose); }
+        .folder-size-details { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.75rem; padding: 0.5rem; background: var(--bg-warm); border-radius: 8px; min-height: 40px; }
+        .folder-size-details strong { color: var(--deep-mauve); }
+        .folder-product-footer { display: flex; justify-content: space-between; align-items: center; }
+        .folder-product-price { font-size: 1.3rem; font-weight: 700; color: var(--deep-mauve); }
+        .folder-add-btn { background: var(--deep-mauve); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; min-height: 44px; }
+        .folder-add-btn:hover { background: var(--dusty-rose); transform: scale(1.05); }
         
         /* Featured Products */
         .products { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
@@ -109,13 +187,13 @@
         .product-name { font-family: 'Playfair Display'; font-size: 1.3rem; color: var(--navy); margin-bottom: 0.5rem; }
         .product-description { color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem; }
         .size-options { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-        .size-btn { padding: 0.4rem 0.8rem; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s ease; flex: 1; min-width: 70px; }
+        .size-btn { padding: 0.4rem 0.8rem; border: 1px solid #ddd; background: white; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s ease; flex: 1; min-width: 70px; min-height: 36px; }
         .size-btn.active { background: var(--dusty-rose); color: white; border-color: var(--dusty-rose); }
         .size-details { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.75rem; padding: 0.5rem; background: var(--bg-warm); border-radius: 8px; min-height: 40px; }
         .size-details strong { color: var(--deep-mauve); }
         .product-footer { display: flex; justify-content: space-between; align-items: center; }
         .product-price { font-size: 1.3rem; font-weight: 700; color: var(--deep-mauve); }
-        .add-to-cart-btn { background: var(--deep-mauve); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; }
+        .add-to-cart-btn { background: var(--deep-mauve); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 25px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; min-height: 44px; }
         .add-to-cart-btn:hover { background: var(--dusty-rose); transform: scale(1.05); }
         
         /* Features */
@@ -127,16 +205,17 @@
         .feature p { color: var(--text-light); font-size: 0.9rem; }
         
         /* Payment */
-.payment-section { padding: 3rem 2rem; max-width: 500px; margin: 0 auto; text-align: center; }
-.mpesa-card-new { background: white; border: 2px solid var(--mpesa-green); color: var(--text-dark); padding: 2rem; border-radius: 16px; box-shadow: var(--shadow); }
-.mpesa-title { color: var(--mpesa-green); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; margin-bottom: 0.5rem; }
-.mpesa-subtitle {color: var(--text-dark); font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; }
-.mpesa-number { color: var(--text-dark); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 0.5rem; }
-.mpesa-name { color: var(--text-light); font-style: italic; font-size: 1rem; font-weight: 500; margin-bottom: 1rem; }
-.mpesa-divider { border: none; height: 1px; background: #ddd; margin: 1rem 0; }
-.mpesa-instruction {  color: var(--text-dark); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
-.mpesa-whatsapp-btn { display: inline-block; background: #25D366; color: white; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1rem;transition: all 0.3s ease; }
-.mpesa-whatsapp-btn:hover { background: #128C7E; transform: scale(1.05); }
+        .payment-section { padding: 3rem 2rem; max-width: 500px; margin: 0 auto; text-align: center; }
+        .mpesa-card-new { background: white; border: 2px solid var(--mpesa-green); color: var(--text-dark); padding: 2rem; border-radius: 16px; box-shadow: var(--shadow); }
+        .mpesa-title { color: var(--mpesa-green); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; margin-bottom: 0.5rem; }
+        .mpesa-subtitle {color: var(--text-dark); font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; }
+        .mpesa-number { color: var(--text-dark); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 0.5rem; }
+        .mpesa-name { color: var(--text-light); font-style: italic; font-size: 1rem; font-weight: 500; margin-bottom: 1rem; }
+        .mpesa-divider { border: none; height: 1px; background: #ddd; margin: 1rem 0; }
+        .mpesa-instruction {  color: var(--text-dark); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
+        .mpesa-whatsapp-btn { display: inline-block; background: #25D366; color: white; padding: 0.875rem 2rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1rem;transition: all 0.3s ease; min-height: 44px; }
+        .mpesa-whatsapp-btn:hover { background: #128C7E; transform: scale(1.05); }
+        
         /* WhatsApp Float */
         .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); cursor: pointer; z-index: 999; transition: all 0.3s ease; text-decoration: none; }
         .whatsapp-float:hover { transform: scale(1.1); }
@@ -152,6 +231,7 @@
         .footer-section a:hover { color: var(--dusty-rose); }
         .footer-bottom { text-align: center; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); font-size: 0.85rem; }
         
+        /* Mobile */
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .mobile-menu { display: flex; }
@@ -160,12 +240,69 @@
             .category-folder { height: 150px; }
             .category-folder.expanded { grid-column: 1 / -1; }
             .category-folder-header { height: 150px; }
-            .category-folder.expanded .category-folder-header { height: 100px; }
+            .category-folder.expanded .category-folder-header { height: 250px; }
             .folder-products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .folder-header-row { top: 70px; }
             .products-grid { grid-template-columns: 1fr; }
             .cart-dropdown { width: 300px; right: -50px; }
+            .whatsapp-float { width: 56px; height: 56px; bottom: 20px; right: 20px; }
+            .whatsapp-float svg { width: 28px; height: 28px; }
         }
+        @media (max-width: 480px) {
+            .folder-products-grid { grid-template-columns: 1fr; }
+            .hero-badges { gap: 0.75rem; }
+            .hero-badge { padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+        /* Cart Quantity Controls */
+        .cart-item-qty { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+        .qty-btn { width: 28px; height: 28px; border: 1px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .qty-btn:hover { background: var(--bg-warm); }
+        .qty-btn.remove { margin-left: auto; color: #E74C3C; border-color: #E74C3C; font-size: 0.75rem; }
+        .qty-btn.remove:hover { background: #E74C3C; color: white; }
+
+        /* Pre-checkout Form */
+        .checkout-form { display: none; background: white; border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-hover); margin-top: 1rem; }
+        .checkout-form.active { display: block; animation: fadeInUp 0.3s ease; }
+        .checkout-form h4 { font-family: 'Playfair Display'; color: var(--navy); margin-bottom: 1rem; font-size: 1.2rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.35rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.95rem; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--deep-mauve); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-submit-btn { width: 100%; padding: 0.875rem; background: var(--deep-mauve); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
+        .form-submit-btn:hover { background: var(--dusty-rose); }
+        .back-to-cart-btn { width: 100%; padding: 0.75rem; background: var(--bg-warm); color: var(--text-dark); border: none; border-radius: 10px; font-weight: 600; cursor: pointer; margin-top: 0.5rem; transition: all 0.3s; }
+        .back-to-cart-btn:hover { background: #eee; }
+
     </style>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Premium flower delivery in Kenya. Fresh handcrafted bouquets from KES 2,500. Based in Karen, Nairobi. Free delivery above KES 15,000. Order via WhatsApp or M-Pesa.">
+    <meta name="keywords" content="flower delivery Kenya, Nairobi florist, Karen flowers, birthday bouquets, roses Kenya, M-Pesa flowers, wedding flowers Nairobi, sympathy flowers, anniversary flowers, corporate flowers Kenya">
+    <meta name="author" content="The Don Flowers">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://thedonflowers.co.ke">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:title" content="The Don Flowers | Premium Flower Delivery Kenya">
+    <meta property="og:description" content="Fresh handcrafted bouquets delivered across all 47 counties in Kenya. Order easily via WhatsApp. Based in Karen, Nairobi.">
+    <meta property="og:image" content="https://thedonflowers.co.ke/SCREENSHOTS/PHOTO%206.jpg">
+    <meta property="og:url" content="https://thedonflowers.co.ke">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_KE">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="The Don Flowers | Premium Flower Delivery Kenya">
+    <meta name="twitter:description" content="Fresh handcrafted bouquets delivered across all 47 counties in Kenya. Order via WhatsApp.">
+    <meta name="twitter:image" content="https://thedonflowers.co.ke/SCREENSHOTS/PHOTO%206.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23D4A5A5'/%3E%3Cpath d='M50 25 Q35 50 50 75 Q65 50 50 25' fill='white'/%3E%3Ccircle cx='50' cy='50' r='12' fill='white'/%3E%3C/svg%3E">
+
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#D4A5A5">
+
+<base target="_blank">
 </head>
 <body>
     <!-- Navigation -->
@@ -225,7 +362,7 @@
                     </div>
                 </div>
 
-                <div class="mobile-menu">
+                <div class="mobile-menu" id="mobileMenuBtn" onclick="toggleMobileMenu()">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -234,9 +371,18 @@
         </div>
     </nav>
 
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <a href="#categories" onclick="toggleMobileMenu()">Shop</a>
+        <a href="#features" onclick="toggleMobileMenu()">Why Us</a>
+        <a href="#payment" onclick="toggleMobileMenu()">Payment</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+    </div>
+
     <!-- Hero -->
     <section class="hero">
-        <div class="hero-content">
+        <div class="hero-content reveal">
             <h1>Premium Flowers, <span>Delivered Kenya-wide</span></h1>
             <p class="hero-subtitle">Based in Karen, Nairobi. Fresh bouquets from KES 2,500. Free delivery on orders above KES 15,000.</p>
             
@@ -246,8 +392,8 @@
                     <span>M-Pesa Accepted</span>
                 </div>
                 <div class="hero-badge">
-                    <div class="hero-badge-icon" style="background: var(--dusty-rose);">★</div>
-                    <span>4.9/5 Rating</span>
+                    <div class="hero-badge-icon" style="background: var(--mpesa-green);">⚡</div>
+                    <span>Same-Day Nairobi</span>
                 </div>
                 <div class="hero-badge">
                     <div class="hero-badge-icon" style="background: var(--navy);">🚚</div>
@@ -257,16 +403,15 @@
         </div>
     </section>
 
-
-    <!-- ===== EXPANDABLE FOLDER CATEGORIES ===== -->
+    <!-- ROW 1: Shop by Occasion -->
     <section class="categories-section" id="categories">
-        <h2 class="categories-title">Shop by Occasion</h2>
-        <div class="categories-grid" id="categoriesGrid">
+        <h2 class="categories-title reveal">Shop by Occasion</h2>
+        <div class="categories-grid" id="categoriesGrid1">
             
             <!-- Birthday Folder -->
-            <div class="category-folder" id="folder-birthday" data-category="birthday">
+            <div class="category-folder reveal" id="folder-birthday" data-category="birthday">
                 <div class="category-folder-header" onclick="openFolder('birthday')">
-                    <img src="SCREENSHOTS/PHOTO 6.jpg" alt="Birthday Flowers">
+                    <img src="SCREENSHOTS/PHOTO 6.jpg" alt="Birthday Flowers" loading="lazy">
                     <div class="category-overlay">
                         <div>
                             <div class="category-name">🎂 Birthday</div>
@@ -280,16 +425,14 @@
                         <h3 class="folder-title">Birthday Flowers</h3>
                         <button class="folder-back-btn" onclick="closeFolder('birthday')">← Back to Categories</button>
                     </div>
-                    <div class="folder-products-grid" id="folder-products-birthday">
-                        <!-- Populated by JS -->
-                    </div>
+                    <div class="folder-products-grid" id="folder-products-birthday"></div>
                 </div>
             </div>
 
             <!-- Romance Folder -->
-            <div class="category-folder" id="folder-romance" data-category="romance">
+            <div class="category-folder reveal" id="folder-romance" data-category="romance">
                 <div class="category-folder-header" onclick="openFolder('romance')">
-                    <img src="SCREENSHOTS/PHOTO 28.jpg" alt="Romance Flowers">
+                    <img src="SCREENSHOTS/PHOTO 28.jpg" alt="Romance Flowers" loading="lazy">
                     <div class="category-overlay">
                         <div>
                             <div class="category-name">❤️ Romance</div>
@@ -303,16 +446,14 @@
                         <h3 class="folder-title">Romance Flowers</h3>
                         <button class="folder-back-btn" onclick="closeFolder('romance')">← Back to Categories</button>
                     </div>
-                    <div class="folder-products-grid" id="folder-products-romance">
-                        <!-- Populated by JS -->
-                    </div>
+                    <div class="folder-products-grid" id="folder-products-romance"></div>
                 </div>
             </div>
 
             <!-- Sympathy Folder -->
-            <div class="category-folder" id="folder-sympathy" data-category="sympathy">
+            <div class="category-folder reveal" id="folder-sympathy" data-category="sympathy">
                 <div class="category-folder-header" onclick="openFolder('sympathy')">
-                    <img src="SCREENSHOTS/PHOTO 45.jpg" alt="Sympathy Flowers">
+                    <img src="SCREENSHOTS/PHOTO 45.jpg" alt="Sympathy Flowers" loading="lazy">
                     <div class="category-overlay">
                         <div>
                             <div class="category-name">🕊️ Sympathy</div>
@@ -326,16 +467,14 @@
                         <h3 class="folder-title">Sympathy Flowers</h3>
                         <button class="folder-back-btn" onclick="closeFolder('sympathy')">← Back to Categories</button>
                     </div>
-                    <div class="folder-products-grid" id="folder-products-sympathy">
-                        <!-- Populated by JS -->
-                    </div>
+                    <div class="folder-products-grid" id="folder-products-sympathy"></div>
                 </div>
             </div>
 
             <!-- Just Because Folder -->
-            <div class="category-folder" id="folder-justbecause" data-category="justbecause">
+            <div class="category-folder reveal" id="folder-justbecause" data-category="justbecause">
                 <div class="category-folder-header" onclick="openFolder('justbecause')">
-                    <img src="SCREENSHOTS/PHOTO 73.jpg" alt="Just Because Flowers">
+                    <img src="SCREENSHOTS/PHOTO 73.jpg" alt="Just Because Flowers" loading="lazy">
                     <div class="category-overlay">
                         <div>
                             <div class="category-name">✨ Just Because</div>
@@ -349,25 +488,116 @@
                         <h3 class="folder-title">Just Because Flowers</h3>
                         <button class="folder-back-btn" onclick="closeFolder('justbecause')">← Back to Categories</button>
                     </div>
-                    <div class="folder-products-grid" id="folder-products-justbecause">
-                        <!-- Populated by JS -->
-                    </div>
+                    <div class="folder-products-grid" id="folder-products-justbecause"></div>
                 </div>
             </div>
 
         </div>
     </section>
+
+    <!-- ROW 2: Shop by Type -->
+    <section class="categories-section">
+        <h2 class="categories-title reveal">Shop by Type</h2>
+        <div class="categories-grid" id="categoriesGrid2">
+            
+            <!-- Water Bouquets Folder -->
+            <div class="category-folder reveal" id="folder-water" data-category="water">
+                <div class="category-folder-header" onclick="openFolder('water')">
+                    <img src="SCREENSHOTS/PHOTO 15.jpg" alt="Water Bouquets" loading="lazy">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">🌊 Water Bouquets</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('water')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Water Bouquets</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('water')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-water"></div>
+                </div>
+            </div>
+
+            <!-- Events Folder -->
+            <div class="category-folder reveal" id="folder-events" data-category="events">
+                <div class="category-folder-header" onclick="openFolder('events')">
+                    <img src="SCREENSHOTS/PHOTO 35.jpg" alt="Events Flowers" loading="lazy">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">🎉 Events</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('events')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Events Flowers</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('events')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-events"></div>
+                </div>
+            </div>
+
+            <!-- Boxed & Vased Folder -->
+            <div class="category-folder reveal" id="folder-boxed" data-category="boxed">
+                <div class="category-folder-header" onclick="openFolder('boxed')">
+                    <img src="SCREENSHOTS/PHOTO 55.jpg" alt="Boxed & Vased Flowers" loading="lazy">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">🎁 Boxed & Vased</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('boxed')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Boxed & Vased Flowers</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('boxed')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-boxed"></div>
+                </div>
+            </div>
+
+            <!-- Baskets Folder -->
+            <div class="category-folder reveal" id="folder-baskets" data-category="baskets">
+                <div class="category-folder-header" onclick="openFolder('baskets')">
+                    <img src="SCREENSHOTS/PHOTO 70.jpg" alt="Basket Arrangements" loading="lazy">
+                    <div class="category-overlay">
+                        <div>
+                            <div class="category-name">🧺 Baskets</div>
+                            <div class="category-count">20 arrangements</div>
+                        </div>
+                        <button class="category-close-btn" onclick="event.stopPropagation(); closeFolder('baskets')">×</button>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-header-row">
+                        <h3 class="folder-title">Basket Arrangements</h3>
+                        <button class="folder-back-btn" onclick="closeFolder('baskets')">← Back to Categories</button>
+                    </div>
+                    <div class="folder-products-grid" id="folder-products-baskets"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Featured Products Section -->
     <section class="products" id="products">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2>Featured Collection</h2>
             <p>Our most popular handcrafted bouquets</p>
         </div>
         
         <div class="products-grid">
             <!-- Product 1 -->
-            <div class="product-card" data-id="1">
-                <img src="SCREENSHOTS/PHOTO 73.jpg" alt="Classic Red Roses" class="product-image">
+            <div class="product-card reveal" data-id="1">
+                <img src="SCREENSHOTS/PHOTO 73.jpg" alt="Classic Red Roses" class="product-image" loading="lazy">
                 <div class="product-info">
                     <span class="product-category romance">Romance</span>
                     <h3 class="product-name">Classic Red Roses</h3>
@@ -386,8 +616,8 @@
             </div>
 
             <!-- Product 2 -->
-            <div class="product-card" data-id="2">
-                <img src="SCREENSHOTS/PHOTO 6.jpg" alt="Sunshine Mix" class="product-image">
+            <div class="product-card reveal" data-id="2">
+                <img src="SCREENSHOTS/PHOTO 6.jpg" alt="Sunshine Mix" class="product-image" loading="lazy">
                 <div class="product-info">
                     <span class="product-category birthday">Birthday</span>
                     <h3 class="product-name">Sunshine Mix</h3>
@@ -406,8 +636,8 @@
             </div>
 
             <!-- Product 3 -->
-            <div class="product-card" data-id="3">
-                <img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&auto=format&fit=crop&q=80" alt="White Elegance" class="product-image">
+            <div class="product-card reveal" data-id="3">
+                <img src="SCREENSHOTS/PHOTO 41.jpg" alt="White Elegance" class="product-image" loading="lazy">
                 <div class="product-info">
                     <span class="product-category sympathy">Sympathy</span>
                     <h3 class="product-name">White Elegance</h3>
@@ -426,8 +656,8 @@
             </div>
 
             <!-- Product 4 -->
-            <div class="product-card" data-id="4">
-                <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&auto=format&fit=crop&q=80" alt="Pastel Dreams" class="product-image">
+            <div class="product-card reveal" data-id="4">
+                <img src="SCREENSHOTS/PHOTO 70.jpg" alt="Pastel Dreams" class="product-image" loading="lazy">
                 <div class="product-info">
                     <span class="product-category justbecause">Just Because</span>
                     <h3 class="product-name">Pastel Dreams</h3>
@@ -446,8 +676,8 @@
             </div>
 
             <!-- Product 5 -->
-            <div class="product-card" data-id="5">
-                <img src="https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=600&auto=format&fit=crop&q=80" alt="Pink Passion" class="product-image">
+            <div class="product-card reveal" data-id="5">
+                <img src="SCREENSHOTS/PHOTO 40.jpg" alt="Pink Passion" class="product-image" loading="lazy">
                 <div class="product-info">
                     <span class="product-category romance">Romance</span>
                     <h3 class="product-name">Pink Passion</h3>
@@ -466,8 +696,8 @@
             </div>
 
             <!-- Product 6 -->
-            <div class="product-card" data-id="6">
-                <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&auto=format&fit=crop&q=80" alt="Tropical Burst" class="product-image">
+            <div class="product-card reveal" data-id="6">
+                <img src="SCREENSHOTS/PHOTO 79.jpg" alt="Tropical Burst" class="product-image" loading="lazy">
                 <div class="product-info">
                     <span class="product-category birthday">Birthday</span>
                     <h3 class="product-name">Tropical Burst</h3>
@@ -489,27 +719,27 @@
 
     <!-- Why Choose Us -->
     <section class="features" id="features">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2>Why Choose The Don Flowers?</h2>
             <p>Your trusted florist in Karen, delivering happiness across Kenya</p>
         </div>
         <div class="features-container">
-            <div class="feature">
+            <div class="feature reveal">
                 <div class="feature-icon">🌸</div>
                 <h3>Freshness Guaranteed</h3>
                 <p>Every bloom hand-selected daily from local growers. Not fresh? We'll replace it free.</p>
             </div>
-            <div class="feature">
+            <div class="feature reveal">
                 <div class="feature-icon">🚚</div>
                 <h3>Countrywide Delivery</h3>
                 <p>From Nairobi to Mombasa, Kisumu to Nakuru. We deliver across all 47 counties.</p>
             </div>
-            <div class="feature">
+            <div class="feature reveal">
                 <div class="feature-icon">💰</div>
                 <h3>Free Delivery</h3>
                 <p>Enjoy free delivery on all orders above KES 15,000. Affordable rates for smaller orders.</p>
             </div>
-            <div class="feature">
+            <div class="feature reveal">
                 <div class="feature-icon">📱</div>
                 <h3>Easy Ordering</h3>
                 <p>Order via WhatsApp or M-Pesa. No complicated apps or registration required.</p>
@@ -519,22 +749,20 @@
 
     <!-- Payment -->
     <section class="payment-section" id="payment">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2>Secure Payment</h2>
             <p>Pay instantly with M-Pesa</p>
         </div>
-                </a>
-                <div class="mpesa-card-new">
-    <div class="mpesa-header">
-        <span class="mpesa-title">M-Pesa</span>
-    </div>
-    <h3 class="mpesa-subtitle">Pay via M-Pesa</h3>
-    <div class="mpesa-number">0700 354 081</div>
-    <p class="mpesa-name">Name: Lawreyne Mueni</p>
-    <hr class="mpesa-divider">
-    <p class="mpesa-instruction">Please send the payment then share the confirmation message via WhatsApp.</p>
-    <a href="https://wa.me/254700354081" class="mpesa-whatsapp-btn" target="_blank">Confirm via WhatsApp</a>
-</div>
+        <div class="mpesa-card-new reveal">
+            <div class="mpesa-header">
+                <span class="mpesa-title">M-Pesa</span>
+            </div>
+            <h3 class="mpesa-subtitle">Pay via M-Pesa</h3>
+            <div class="mpesa-number">0700 354 081</div>
+            <p class="mpesa-name">Name: Lawreyne Mueni</p>
+            <hr class="mpesa-divider">
+            <p class="mpesa-instruction">Please send the payment then share the confirmation message via WhatsApp.</p>
+            <a href="https://wa.me/254700354081" class="mpesa-whatsapp-btn" target="_blank">Confirm via WhatsApp</a>
         </div>
     </section>
 
@@ -582,375 +810,601 @@
             <p>&copy; 2026 The Don Flowers. All rights reserved. | Fresh flowers, delivered with love across Kenya.</p>
         </div>
     </footer>
-
     <script>
-        // ===== FOLDER PRODUCTS DATA =====
-        // Each category has 20 sample products (you can add more)
-        const folderProducts = {
-            birthday: [
-                { name: "Sunshine Mix", price: 2800, image: "SCREENSHOTS/PHOTO 1.jpg"},
-                { name: "Tropical Burst", price: 5500, image: "SCREENSHOTS/PHOTO 2.jpg" },
-                { name: "Birthday Bliss", price: 3200, image: "SCREENSHOTS/PHOTO 3.jpg" },
-                { name: "Candy Carnival", price: 4500, image: "SCREENSHOTS/PHOTO 4.jpg" },
-                { name: "Golden Celebration", price: 3800, image: "SCREENSHOTS/PHOTO 5.jpg" },
-                { name: "Party Popper", price: 2900, image: "SCREENSHOTS/PHOTO 6.jpg" },
-                { name: "Sweet Sixteen", price: 5200, image: "SCREENSHOTS/PHOTO 7.jpg" },
-                { name: "Balloon Bloom", price: 3500, image: "SCREENSHOTS/PHOTO 8.jpg" },
-                { name: "Cake Companion", price: 4200, image: "SCREENSHOTS/PHOTO 9.jpg" },
-                { name: "Festive Fiesta", price: 4800, image: "SCREENSHOTS/PHOTO 10.jpg" },
-                { name: "Happy Day", price: 2600, image: "SCREENSHOTS/PHOTO 11.jpg" },
-                { name: "Joyful Bunch", price: 3100, image: "SCREENSHOTS/PHOTO 12.jpg" },
-                { name: "Birthday Queen", price: 6500, image: "SCREENSHOTS/PHOTO 13.jpg" },
-                { name: "Cheerful Charm", price: 3400, image: "SCREENSHOTS/PHOTO 14.jpg" },
-                { name: "Surprise Box", price: 5800, image: "SCREENSHOTS/PHOTO 15.jpg" },
-                { name: "Vibrant Wishes", price: 3900, image: "SCREENSHOTS/PHOTO 16.jpg" },
-                { name: "Magic Moment", price: 7200, image: "SCREENSHOTS/PHOTO 17.jpg" },
-                { name: "Rainbow Joy", price: 4300, image: "SCREENSHOTS/PHOTO 18.jpg" },
-                { name: "Star Shine", price: 3600, image: "SCREENSHOTS/PHOTO 19.jpg" },
-                { name: "Wish Maker", price: 4900, image: "SCREENSHOTS/PHOTO 20.jpg" }
-            ],
-            romance: [
-                { name: "Classic Red Roses", price: 3500, image: "SCREENSHOTS/PHOTO 21.jpg" },
-                { name: "Pink Passion", price: 4800, image: "SCREENSHOTS/PHOTO 22.jpg" },
-                { name: "Love Letter", price: 5200, image: "SCREENSHOTS/PHOTO 23.jpg" },
-                { name: "Heartstrings", price: 4200, image: "SCREENSHOTS/PHOTO 24.jpg" },
-                { name: "Forever Yours", price: 6800, image: "SCREENSHOTS/PHOTO 25.jpg" },
-                { name: "Sweetheart", price: 3100, image: "SCREENSHOTS/PHOTO 26.jpg" },
-                { name: "Amour", price: 7500, image: "SCREENSHOTS/PHOTO 27.jpg" },
-                { name: "Rose Garden", price: 5500, image: "SCREENSHOTS/PHOTO 28.jpg" },
-                { name: "True Love", price: 8900, image: "SCREENSHOTS/PHOTO 29.jpg" },
-                { name: "Velvet Kiss", price: 4600, image: "SCREENSHOTS/PHOTO 30.jpg" },
-                { name: "Cherish", price: 5800, image: "SCREENSHOTS/PHOTO 31.jpg" },
-                { name: "Devotion", price: 7200, image: "SCREENSHOTS/PHOTO 32.jpg" },
-                { name: "Eternal Flame", price: 9500, image: "SCREENSHOTS/PHOTO 33.jpg" },
-                { name: "Romance Box", price: 6500, image: "SCREENSHOTS/PHOTO 34.jpg" },
-                { name: "Bliss", price: 3800, image: "SCREENSHOTS/PHOTO 35.jpg" },
-                { name: "Adore", price: 8200, image: "SCREENSHOTS/PHOTO 36.jpg" },
-                { name: "Passion", price: 4900, image: "SCREENSHOTS/PHOTO 37.jpg" },
-                { name: "Heartbeat", price: 5600, image: "SCREENSHOTS/PHOTO 38.jpg" },
-                { name: "Soulmate", price: 11000, image: "SCREENSHOTS/PHOTO 39.jpg" },
-                { name: "Forever", price: 7800, image: "SCREENSHOTS/PHOTO 40.jpg" }
-            ],
-            sympathy: [
-                { name: "White Elegance", price: 4200, image: "SCREENSHOTS/PHOTO 41.jpg" },
-                { name: "Peaceful Rest", price: 3800, image: "SCREENSHOTS/PHOTO 42.jpg" },
-                { name: "Serenity", price: 4500, image: "SCREENSHOTS/PHOTO 43.jpg" },
-                { name: "Gentle Soul", price: 5200, image: "SCREENSHOTS/PHOTO 44.jpg" },
-                { name: "Pure Heart", price: 3600, image: "SCREENSHOTS/PHOTO 45.jpg" },
-                { name: "Comfort", price: 4800, image: "SCREENSHOTS/PHOTO 46.jpg" },
-                { name: "Memorial", price: 6500, image: "SCREENSHOTS/PHOTO 47.jpg" },
-                { name: "Tender Thoughts", price: 4100, image: "SCREENSHOTS/PHOTO 48.jpg" },
-                { name: "Grace", price: 5500, image: "SCREENSHOTS/PHOTO 49.jpg" },
-                { name: "Remembrance", price: 7200, image: "SCREENSHOTS/PHOTO 50.jpg" },
-                { name: "Dove", price: 3900, image: "SCREENSHOTS/PHOTO 51.jpg" },
-                { name: "Angelic", price: 5800, image: "SCREENSHOTS/PHOTO 52.jpg" },
-                { name: "Heavenly", price: 6800, image: "SCREENSHOTS/PHOTO 53.jpg" },
-                { name: "Tranquil", price: 4400, image: "SCREENSHOTS/PHOTO 54.jpg" },
-                { name: "Eternal Peace", price: 8500, image: "SCREENSHOTS/PHOTO 55.jpg" },
-                { name: "Soft Whisper", price: 3700, image: "SCREENSHOTS/PHOTO 56.jpg" },
-                { name: "Lily Cross", price: 9200, image: "SCREENSHOTS/PHOTO 57.jpg" },
-                { name: "Calm Waters", price: 4600, image: "SCREENSHOTS/PHOTO 58.jpg" },
-                { name: "Silent Prayer", price: 5200, image: "SCREENSHOTS/PHOTO 59.jpg" },
-                { name: "White Dove", price: 6100, image: "SCREENSHOTS/PHOTO 60.jpg" }
-            ],
-            justbecause: [
-                { name: "Pastel Dreams", price: 3200, image: "SCREENSHOTS/PHOTO 61.jpg" },
-                { name: "Thinking of You", price: 2800, image: "SCREENSHOTS/PHOTO 62.jpg" },
-                { name: "Smile Maker", price: 2400, image: "SCREENSHOTS/PHOTO 63.jpg" },
-                { name: "Bright Day", price: 3600, image: "SCREENSHOTS/PHOTO 64.jpg" },
-                { name: "Cheer Up", price: 2900, image: "SCREENSHOTS/PHOTO 65.jpg" },
-                { name: "Hello Sunshine", price: 3300, image: "SCREENSHOTS/PHOTO 66.jpg" },
-                { name: "Pick Me Up", price: 2600, image: "SCREENSHOTS/PHOTO 67.jpg" },
-                { name: "Little Joy", price: 2200, image: "SCREENSHOTS/PHOTO 68.jpg" },
-                { name: "Friendship", price: 3800, image: "SCREENSHOTS/PHOTO 69.jpg" },
-                { name: "Get Well", price: 4200, image: "SCREENSHOTS/PHOTO 70.jpg" },
-                { name: "Thank You", price: 3500, image: "SCREENSHOTS/PHOTO 71.jpg" },
-                { name: "Miss You", price: 3100, image: "SCREENSHOTS/PHOTO 72.jpg" },
-                { name: "Congratulations", price: 4800, image: "SCREENSHOTS/PHOTO 73.jpg" },
-                { name: "Good Luck", price: 2700, image: "SCREENSHOTS/PHOTO 74.jpg" },
-                { name: "Welcome Home", price: 3900, image: "SCREENSHOTS/PHOTO 75.jpg" },
-                { name: "New Baby", price: 4500, image: "SCREENSHOTS/PHOTO 76.jpg" },
-                { name: "Housewarming", price: 5200, image: "SCREENSHOTS/PHOTO 77.jpg" },
-                { name: "Anniversary", price: 5800, image: "SCREENSHOTS/PHOTO 78.jpg" },
-                { name: "Graduation", price: 3400, image: "SCREENSHOTS/PHOTO 79.jpg" },
-                { name: "Appreciation", price: 4100, image: "SCREENSHOTS/PHOTO 80.jpg" }
-            ]
-        };
+// ===== MOBILE MENU =====
+function toggleMobileMenu() {
+    const btn = document.getElementById('mobileMenuBtn');
+    const drawer = document.getElementById('mobileDrawer');
+    const overlay = document.getElementById('mobileDrawerOverlay');
+    btn.classList.toggle('active');
+    drawer.classList.toggle('active');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = drawer.classList.contains('active') ? 'hidden' : '';
+}
 
-        // ===== FOLDER FUNCTIONS =====
-        function openFolder(category) {
-            const grid = document.getElementById('categoriesGrid');
-            const folder = document.getElementById('folder-' + category);
-            const container = document.getElementById('folder-products-' + category);
-            
-            // Close any open folder first
-            document.querySelectorAll('.category-folder').forEach(f => {
-                f.classList.remove('expanded');
-            });
-            grid.classList.remove('has-expanded');
-            
-            // Expand clicked folder
-            folder.classList.add('expanded');
-            grid.classList.add('has-expanded');
-            
-            // Populate products if not already done
-            if (!container.dataset.populated) {
-                container.innerHTML = folderProducts[category].map((p, i) => `
-                    <div class="folder-product-card">
-                        <img src="${p.image}" alt="${p.name}" class="folder-product-img">
-                        <div class="folder-product-info">
-                            <div class="folder-product-name">${p.name}</div>
-                            <div class="folder-product-price">KES ${p.price.toLocaleString()}</div>
-                            <button class="folder-product-add" onclick="addFolderProductToCart('${p.name}', ${p.price}, '${p.image}')">+ Add to Cart</button>
+// ===== SCROLL REVEAL =====
+function initReveal() {
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+}
+
+// Run on DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initReveal);
+} else {
+    initReveal();
+}
+
+// ===== FOLDER PRODUCTS DATA =====
+const folderProducts = {
+    birthday: [
+        { name: "Sunshine Mix", description: "Bright and cheerful birthday blooms", image: "SCREENSHOTS/PHOTO 1.jpg", category: "birthday", sizes: { standard: { price: 2800, details: "8 stems + basic wrapping" }, deluxe: { price: 4500, details: "15 stems + premium wrapping + ribbon" }, premium: { price: 7200, details: "25 stems + luxury box + chocolates" } } },
+        { name: "Tropical Burst", description: "Exotic tropical birthday arrangement", image: "SCREENSHOTS/PHOTO 2.jpg", category: "birthday", sizes: { standard: { price: 3500, details: "5 tropical stems + greenery" }, deluxe: { price: 5500, details: "10 stems + ceramic vase" }, premium: { price: 8500, details: "15+ stems + luxury basket" } } },
+        { name: "Birthday Bliss", description: "Pure joy in a bouquet", image: "SCREENSHOTS/PHOTO 3.jpg", category: "birthday", sizes: { standard: { price: 3200, details: "10 mixed stems" }, deluxe: { price: 5000, details: "18 stems + premium wrap" }, premium: { price: 7800, details: "30 stems + gift box" } } },
+        { name: "Candy Carnival", description: "Colorful candy-inspired mix", image: "SCREENSHOTS/PHOTO 4.jpg", category: "birthday", sizes: { standard: { price: 2900, details: "8 colorful stems" }, deluxe: { price: 4600, details: "15 stems + confetti ribbon" }, premium: { price: 7000, details: "25 stems + balloon bundle" } } },
+        { name: "Golden Celebration", description: "Golden tones for a special day", image: "SCREENSHOTS/PHOTO 5.jpg", category: "birthday", sizes: { standard: { price: 3800, details: "10 golden stems" }, deluxe: { price: 5800, details: "18 stems + gold wrapping" }, premium: { price: 9000, details: "30 stems + champagne add-on" } } },
+        { name: "Party Popper", description: "Fun and festive party flowers", image: "SCREENSHOTS/PHOTO 6.jpg", category: "birthday", sizes: { standard: { price: 2500, details: "8 bright stems" }, deluxe: { price: 4000, details: "15 stems + party hat" }, premium: { price: 6500, details: "25 stems + cake topper" } } },
+        { name: "Sweet Sixteen", description: "Perfect for milestone birthdays", image: "SCREENSHOTS/PHOTO 7.jpg", category: "birthday", sizes: { standard: { price: 4200, details: "12 pink stems" }, deluxe: { price: 6500, details: "20 stems + tiara" }, premium: { price: 9500, details: "35 stems + photo frame" } } },
+        { name: "Balloon Bloom", description: "Flowers with balloon accents", image: "SCREENSHOTS/PHOTO 8.jpg", category: "birthday", sizes: { standard: { price: 3100, details: "8 stems + 1 balloon" }, deluxe: { price: 4800, details: "15 stems + 3 balloons" }, premium: { price: 7500, details: "25 stems + balloon bouquet" } } },
+        { name: "Cake Companion", description: "The perfect pair with any cake", image: "SCREENSHOTS/PHOTO 9.jpg", category: "birthday", sizes: { standard: { price: 2700, details: "8 stems" }, deluxe: { price: 4300, details: "15 stems + cake ribbon" }, premium: { price: 6800, details: "25 stems + cake topper flowers" } } },
+        { name: "Festive Fiesta", description: "Fiesta-themed birthday blooms", image: "SCREENSHOTS/PHOTO 10.jpg", category: "birthday", sizes: { standard: { price: 3300, details: "10 vibrant stems" }, deluxe: { price: 5200, details: "18 stems + fiesta decor" }, premium: { price: 8000, details: "30 stems + pinata accent" } } },
+        { name: "Happy Day", description: "Simple happiness in a bouquet", image: "SCREENSHOTS/PHOTO 11.jpg", category: "birthday", sizes: { standard: { price: 2300, details: "6 stems" }, deluxe: { price: 3800, details: "12 stems + happy birthday tag" }, premium: { price: 6000, details: "20 stems + LED lights" } } },
+        { name: "Joyful Bunch", description: "A bunch of pure joy", image: "SCREENSHOTS/PHOTO 12.jpg", category: "birthday", sizes: { standard: { price: 2600, details: "8 mixed stems" }, deluxe: { price: 4200, details: "15 stems + joy card" }, premium: { price: 6800, details: "25 stems + teddy bear" } } },
+        { name: "Birthday Queen", description: "Fit for a queen", image: "SCREENSHOTS/PHOTO 13.jpg", category: "birthday", sizes: { standard: { price: 4500, details: "12 luxury stems" }, deluxe: { price: 7000, details: "22 stems + crown" }, premium: { price: 11000, details: "40 stems + royal box" } } },
+        { name: "Cheerful Charm", description: "Charming and cheerful", image: "SCREENSHOTS/PHOTO 14.jpg", category: "birthday", sizes: { standard: { price: 2800, details: "8 stems" }, deluxe: { price: 4500, details: "15 stems + charm bracelet" }, premium: { price: 7200, details: "25 stems + jewelry box" } } },
+        { name: "Surprise Box", description: "A surprise in every box", image: "SCREENSHOTS/PHOTO 15.jpg", category: "birthday", sizes: { standard: { price: 3500, details: "8 stems in box" }, deluxe: { price: 5500, details: "15 stems + surprise gift" }, premium: { price: 8500, details: "25 stems + luxury surprise box" } } },
+        { name: "Vibrant Wishes", description: "Vibrant wishes come true", image: "SCREENSHOTS/PHOTO 16.jpg", category: "birthday", sizes: { standard: { price: 3000, details: "10 colorful stems" }, deluxe: { price: 4800, details: "18 stems + wish card" }, premium: { price: 7500, details: "30 stems + dream catcher" } } },
+        { name: "Magic Moment", description: "Magical birthday moments", image: "SCREENSHOTS/PHOTO 17.jpg", category: "birthday", sizes: { standard: { price: 4000, details: "10 magical stems" }, deluxe: { price: 6200, details: "18 stems + fairy lights" }, premium: { price: 9500, details: "30 stems + magic wand" } } },
+        { name: "Rainbow Joy", description: "Rainbow of birthday joy", image: "SCREENSHOTS/PHOTO 18.jpg", category: "birthday", sizes: { standard: { price: 3200, details: "10 rainbow stems" }, deluxe: { price: 5000, details: "18 stems + rainbow ribbon" }, premium: { price: 7800, details: "30 stems + rainbow decor" } } },
+        { name: "Star Shine", description: "Shine like a star", image: "SCREENSHOTS/PHOTO 19.jpg", category: "birthday", sizes: { standard: { price: 2900, details: "8 star-shaped blooms" }, deluxe: { price: 4600, details: "15 stems + star decor" }, premium: { price: 7200, details: "25 stems + star projector" } } },
+        { name: "Wish Maker", description: "Make a wish with flowers", image: "SCREENSHOTS/PHOTO 20.jpg", category: "birthday", sizes: { standard: { price: 3100, details: "10 wish stems" }, deluxe: { price: 4900, details: "18 stems + wish jar" }, premium: { price: 7600, details: "30 stems + crystal ball" } } }
+    ],
+    romance: [
+        { name: "Classic Red Roses", description: "Timeless red roses for love", image: "SCREENSHOTS/PHOTO 21.jpg", category: "romance", sizes: { standard: { price: 3500, details: "12 red roses + basic wrap" }, deluxe: { price: 5500, details: "24 roses + premium wrapping + greenery" }, premium: { price: 8500, details: "36 roses + luxury box + chocolates" } } },
+        { name: "Pink Passion", description: "Passionate pink blooms", image: "SCREENSHOTS/PHOTO 22.jpg", category: "romance", sizes: { standard: { price: 3800, details: "10 pink roses" }, deluxe: { price: 6000, details: "20 roses + peonies" }, premium: { price: 9500, details: "30+ roses + orchids + luxury box" } } },
+        { name: "Love Letter", description: "Flowers that speak love", image: "SCREENSHOTS/PHOTO 23.jpg", category: "romance", sizes: { standard: { price: 3200, details: "8 stems + love note" }, deluxe: { price: 5000, details: "15 stems + handwritten letter" }, premium: { price: 7800, details: "25 stems + love book" } } },
+        { name: "Heartstrings", description: "Pull at their heartstrings", image: "SCREENSHOTS/PHOTO 24.jpg", category: "romance", sizes: { standard: { price: 3400, details: "10 heart-shaped arrangement" }, deluxe: { price: 5400, details: "18 stems + heart box" }, premium: { price: 8200, details: "30 stems + heart locket" } } },
+        { name: "Forever Yours", description: "Eternal love in blooms", image: "SCREENSHOTS/PHOTO 25.jpg", category: "romance", sizes: { standard: { price: 4200, details: "12 eternal roses" }, deluxe: { price: 6500, details: "22 stems + forever promise card" }, premium: { price: 10000, details: "40 stems + eternity ring accent" } } },
+        { name: "Sweetheart", description: "For your sweetheart", image: "SCREENSHOTS/PHOTO 26.jpg", category: "romance", sizes: { standard: { price: 2800, details: "8 sweet stems" }, deluxe: { price: 4400, details: "15 stems + sweetheart card" }, premium: { price: 7000, details: "25 stems + couples photo frame" } } },
+        { name: "Amour", description: "French romance in a bouquet", image: "SCREENSHOTS/PHOTO 27.jpg", category: "romance", sizes: { standard: { price: 4500, details: "10 luxury stems" }, deluxe: { price: 7000, details: "18 stems + French perfume sample" }, premium: { price: 11000, details: "30 stems + luxury French box" } } },
+        { name: "Rose Garden", description: "A garden of roses", image: "SCREENSHOTS/PHOTO 28.jpg", category: "romance", sizes: { standard: { price: 4000, details: "12 mixed roses" }, deluxe: { price: 6200, details: "22 stems + garden decor" }, premium: { price: 9500, details: "40 stems + mini garden set" } } },
+        { name: "True Love", description: "True love never fades", image: "SCREENSHOTS/PHOTO 29.jpg", category: "romance", sizes: { standard: { price: 4800, details: "10 true love stems" }, deluxe: { price: 7500, details: "20 stems + true love promise" }, premium: { price: 11500, details: "35 stems + diamond accent" } } },
+        { name: "Velvet Kiss", description: "Soft as velvet, sweet as a kiss", image: "SCREENSHOTS/PHOTO 30.jpg", category: "romance", sizes: { standard: { price: 3600, details: "8 velvet roses" }, deluxe: { price: 5600, details: "15 stems + velvet ribbon" }, premium: { price: 8600, details: "25 stems + velvet box" } } },
+        { name: "Cherish", description: "Cherish every moment", image: "SCREENSHOTS/PHOTO 31.jpg", category: "romance", sizes: { standard: { price: 3900, details: "10 cherish stems" }, deluxe: { price: 6100, details: "18 stems + cherish journal" }, premium: { price: 9200, details: "30 stems + memory book" } } },
+        { name: "Devotion", description: "Devoted to you", image: "SCREENSHOTS/PHOTO 32.jpg", category: "romance", sizes: { standard: { price: 4300, details: "12 devoted stems" }, deluxe: { price: 6700, details: "22 stems + devotion candle" }, premium: { price: 10200, details: "35 stems + devotion set" } } },
+        { name: "Eternal Flame", description: "Love that burns eternal", image: "SCREENSHOTS/PHOTO 33.jpg", category: "romance", sizes: { standard: { price: 5000, details: "10 flame-colored stems" }, deluxe: { price: 7800, details: "20 stems + eternal flame candle" }, premium: { price: 12000, details: "35 stems + flame sculpture" } } },
+        { name: "Romance Box", description: "Romance delivered in a box", image: "SCREENSHOTS/PHOTO 34.jpg", category: "romance", sizes: { standard: { price: 3800, details: "8 stems in box" }, deluxe: { price: 6000, details: "15 stems + romance novel" }, premium: { price: 9200, details: "25 stems + luxury romance box" } } },
+        { name: "Bliss", description: "Pure romantic bliss", image: "SCREENSHOTS/PHOTO 35.jpg", category: "romance", sizes: { standard: { price: 3300, details: "10 bliss stems" }, deluxe: { price: 5200, details: "18 stems + bliss oil" }, premium: { price: 8000, details: "30 stems + spa set" } } },
+        { name: "Adore", description: "Adore them with flowers", image: "SCREENSHOTS/PHOTO 36.jpg", category: "romance", sizes: { standard: { price: 4600, details: "12 adore stems" }, deluxe: { price: 7200, details: "22 stems + adore perfume" }, premium: { price: 11000, details: "35 stems + adore jewelry" } } },
+        { name: "Passion", description: "Passionate red blooms", image: "SCREENSHOTS/PHOTO 37.jpg", category: "romance", sizes: { standard: { price: 3700, details: "10 passion stems" }, deluxe: { price: 5800, details: "18 stems + passion fruit chocolate" }, premium: { price: 8900, details: "30 stems + passion set" } } },
+        { name: "Heartbeat", description: "Flowers that match your heartbeat", image: "SCREENSHOTS/PHOTO 38.jpg", category: "romance", sizes: { standard: { price: 3500, details: "8 heartbeat stems" }, deluxe: { price: 5500, details: "15 stems + heartbeat monitor toy" }, premium: { price: 8500, details: "25 stems + couples watch" } } },
+        { name: "Soulmate", description: "For your soulmate", image: "SCREENSHOTS/PHOTO 39.jpg", category: "romance", sizes: { standard: { price: 5200, details: "12 soulmate stems" }, deluxe: { price: 8100, details: "22 stems + soulmate bracelet" }, premium: { price: 12500, details: "40 stems + soulmate necklace" } } },
+        { name: "Forever", description: "Forever and always", image: "SCREENSHOTS/PHOTO 40.jpg", category: "romance", sizes: { standard: { price: 4100, details: "10 forever stems" }, deluxe: { price: 6400, details: "20 stems + forever promise" }, premium: { price: 9800, details: "35 stems + infinity symbol decor" } } }
+    ],
+    sympathy: [
+        { name: "White Elegance", description: "Elegant white sympathy flowers", image: "SCREENSHOTS/PHOTO 41.jpg", category: "sympathy", sizes: { standard: { price: 3800, details: "8 white stems" }, deluxe: { price: 6000, details: "15 stems + white ribbon" }, premium: { price: 9200, details: "25 stems + white dove figurine" } } },
+        { name: "Peaceful Rest", description: "Peaceful white lilies", image: "SCREENSHOTS/PHOTO 42.jpg", category: "sympathy", sizes: { standard: { price: 3500, details: "6 white lilies" }, deluxe: { price: 5500, details: "12 lilies + peace card" }, premium: { price: 8500, details: "20 lilies + angel figurine" } } },
+        { name: "Serenity", description: "Serene and calming arrangement", image: "SCREENSHOTS/PHOTO 43.jpg", category: "sympathy", sizes: { standard: { price: 3200, details: "8 serene stems" }, deluxe: { price: 5000, details: "15 stems + serenity candle" }, premium: { price: 7800, details: "25 stems + serenity set" } } },
+        { name: "Gentle Soul", description: "For a gentle soul", image: "SCREENSHOTS/PHOTO 44.jpg", category: "sympathy", sizes: { standard: { price: 3600, details: "10 gentle stems" }, deluxe: { price: 5600, details: "18 stems + gentle memory card" }, premium: { price: 8600, details: "30 stems + memory book" } } },
+        { name: "Pure Heart", description: "Pure white hearts", image: "SCREENSHOTS/PHOTO 45.jpg", category: "sympathy", sizes: { standard: { price: 3400, details: "8 pure stems" }, deluxe: { price: 5300, details: "15 stems + pure heart card" }, premium: { price: 8200, details: "25 stems + crystal heart" } } },
+        { name: "Comfort", description: "Comfort in difficult times", image: "SCREENSHOTS/PHOTO 46.jpg", category: "sympathy", sizes: { standard: { price: 3000, details: "8 comfort stems" }, deluxe: { price: 4700, details: "15 stems + comfort blanket" }, premium: { price: 7300, details: "25 stems + comfort care package" } } },
+        { name: "Memorial", description: "In loving memory", image: "SCREENSHOTS/PHOTO 47.jpg", category: "sympathy", sizes: { standard: { price: 4200, details: "10 memorial stems" }, deluxe: { price: 6500, details: "18 stems + memorial frame" }, premium: { price: 10000, details: "30 stems + memorial plaque" } } },
+        { name: "Tender Thoughts", description: "Tender thoughts and prayers", image: "SCREENSHOTS/PHOTO 48.jpg", category: "sympathy", sizes: { standard: { price: 3300, details: "8 tender stems" }, deluxe: { price: 5200, details: "15 stems + prayer card" }, premium: { price: 8000, details: "25 stems + prayer book" } } },
+        { name: "Grace", description: "Graceful white arrangement", image: "SCREENSHOTS/PHOTO 49.jpg", category: "sympathy", sizes: { standard: { price: 3700, details: "10 graceful stems" }, deluxe: { price: 5800, details: "18 stems + grace candle" }, premium: { price: 9000, details: "30 stems + grace statue" } } },
+        { name: "Remembrance", description: "Always remembered", image: "SCREENSHOTS/PHOTO 50.jpg", category: "sympathy", sizes: { standard: { price: 4000, details: "10 remembrance stems" }, deluxe: { price: 6200, details: "20 stems + remembrance book" }, premium: { price: 9500, details: "35 stems + remembrance garden" } } },
+        { name: "Dove", description: "Peace like a dove", image: "SCREENSHOTS/PHOTO 51.jpg", category: "sympathy", sizes: { standard: { price: 3100, details: "8 dove-white stems" }, deluxe: { price: 4900, details: "15 stems + dove figurine" }, premium: { price: 7600, details: "25 stems + dove wind chime" } } },
+        { name: "Angelic", description: "Angel-white blooms", image: "SCREENSHOTS/PHOTO 52.jpg", category: "sympathy", sizes: { standard: { price: 3500, details: "10 angelic stems" }, deluxe: { price: 5500, details: "18 stems + angel figurine" }, premium: { price: 8500, details: "30 stems + angel wind spinner" } } },
+        { name: "Heavenly", description: "Heavenly white arrangement", image: "SCREENSHOTS/PHOTO 53.jpg", category: "sympathy", sizes: { standard: { price: 3800, details: "10 heavenly stems" }, deluxe: { price: 6000, details: "18 stems + heavenly candle" }, premium: { price: 9200, details: "30 stems + heavenly music box" } } },
+        { name: "Tranquil", description: "Tranquil white peace", image: "SCREENSHOTS/PHOTO 54.jpg", category: "sympathy", sizes: { standard: { price: 3200, details: "8 tranquil stems" }, deluxe: { price: 5000, details: "15 stems + tranquil oil" }, premium: { price: 7800, details: "25 stems + tranquil fountain" } } },
+        { name: "Eternal Peace", description: "Eternal peace and rest", image: "SCREENSHOTS/PHOTO 55.jpg", category: "sympathy", sizes: { standard: { price: 4500, details: "12 eternal stems" }, deluxe: { price: 7000, details: "22 stems + eternal flame" }, premium: { price: 10800, details: "35 stems + eternal peace garden" } } },
+        { name: "Soft Whisper", description: "Soft whispers of comfort", image: "SCREENSHOTS/PHOTO 56.jpg", category: "sympathy", sizes: { standard: { price: 2900, details: "8 soft stems" }, deluxe: { price: 4600, details: "15 stems + whisper journal" }, premium: { price: 7200, details: "25 stems + whisper wind chime" } } },
+        { name: "Lily Cross", description: "White lily cross tribute", image: "SCREENSHOTS/PHOTO 57.jpg", category: "sympathy", sizes: { standard: { price: 4800, details: "10 lily cross stems" }, deluxe: { price: 7500, details: "20 stems + cross stand" }, premium: { price: 11500, details: "35 stems + lighted cross" } } },
+        { name: "Calm Waters", description: "Calm as still waters", image: "SCREENSHOTS/PHOTO 58.jpg", category: "sympathy", sizes: { standard: { price: 3400, details: "8 calm stems" }, deluxe: { price: 5300, details: "15 stems + water fountain" }, premium: { price: 8200, details: "25 stems + calm waters painting" } } },
+        { name: "Silent Prayer", description: "Silent prayers and thoughts", image: "SCREENSHOTS/PHOTO 59.jpg", category: "sympathy", sizes: { standard: { price: 3600, details: "10 prayer stems" }, deluxe: { price: 5600, details: "18 stems + prayer beads" }, premium: { price: 8600, details: "30 stems + prayer book set" } } },
+        { name: "White Dove", description: "White dove of peace", image: "SCREENSHOTS/PHOTO 60.jpg", category: "sympathy", sizes: { standard: { price: 3900, details: "10 dove-white stems" }, deluxe: { price: 6100, details: "20 stems + dove release kit" }, premium: { price: 9400, details: "35 stems + dove sculpture" } } }
+    ],
+    justbecause: [
+        { name: "Pastel Dreams", description: "Soft pastel daydreams", image: "SCREENSHOTS/PHOTO 61.jpg", category: "justbecause", sizes: { standard: { price: 2800, details: "8 pastel stems" }, deluxe: { price: 4400, details: "15 stems + pastel ribbon" }, premium: { price: 6800, details: "25 stems + pastel art print" } } },
+        { name: "Thinking of You", description: "Just because I am thinking of you", image: "SCREENSHOTS/PHOTO 62.jpg", category: "justbecause", sizes: { standard: { price: 2600, details: "8 thinking stems" }, deluxe: { price: 4100, details: "15 stems + thinking of you card" }, premium: { price: 6400, details: "25 stems + photo album" } } },
+        { name: "Smile Maker", description: "Guaranteed to make them smile", image: "SCREENSHOTS/PHOTO 63.jpg", category: "justbecause", sizes: { standard: { price: 2400, details: "8 smile stems" }, deluxe: { price: 3800, details: "15 stems + smiley balloon" }, premium: { price: 6000, details: "25 stems + smile care package" } } },
+        { name: "Bright Day", description: "Brighten their day", image: "SCREENSHOTS/PHOTO 64.jpg", category: "justbecause", sizes: { standard: { price: 3000, details: "10 bright stems" }, deluxe: { price: 4700, details: "18 stems + sunshine card" }, premium: { price: 7300, details: "30 stems + bright day gift set" } } },
+        { name: "Cheer Up", description: "Cheer up bouquet", image: "SCREENSHOTS/PHOTO 65.jpg", category: "justbecause", sizes: { standard: { price: 2500, details: "8 cheer stems" }, deluxe: { price: 4000, details: "15 stems + cheer card" }, premium: { price: 6200, details: "25 stems + cheer gift box" } } },
+        { name: "Hello Sunshine", description: "Hello sunshine yellow blooms", image: "SCREENSHOTS/PHOTO 66.jpg", category: "justbecause", sizes: { standard: { price: 2700, details: "8 sunshine stems" }, deluxe: { price: 4300, details: "15 stems + sunshine card" }, premium: { price: 6700, details: "25 stems + sunshine mug" } } },
+        { name: "Pick Me Up", description: "A little pick me up", image: "SCREENSHOTS/PHOTO 67.jpg", category: "justbecause", sizes: { standard: { price: 2300, details: "6 pick-me-up stems" }, deluxe: { price: 3700, details: "12 stems + pick me up tea" }, premium: { price: 5800, details: "20 stems + pick me up spa set" } } },
+        { name: "Little Joy", description: "A little joy goes a long way", image: "SCREENSHOTS/PHOTO 68.jpg", category: "justbecause", sizes: { standard: { price: 2100, details: "6 joy stems" }, deluxe: { price: 3400, details: "12 stems + joy candle" }, premium: { price: 5300, details: "20 stems + joy journal" } } },
+        { name: "Friendship", description: "For a true friend", image: "SCREENSHOTS/PHOTO 69.jpg", category: "justbecause", sizes: { standard: { price: 3100, details: "10 friendship stems" }, deluxe: { price: 4900, details: "18 stems + friendship bracelet" }, premium: { price: 7600, details: "30 stems + friendship photo frame" } } },
+        { name: "Get Well", description: "Wishing you a speedy recovery", image: "SCREENSHOTS/PHOTO 70.jpg", category: "justbecause", sizes: { standard: { price: 2900, details: "8 get well stems" }, deluxe: { price: 4600, details: "15 stems + get well card" }, premium: { price: 7200, details: "25 stems + get well care package" } } },
+        { name: "Thank You", description: "Say thank you with flowers", image: "SCREENSHOTS/PHOTO 71.jpg", category: "justbecause", sizes: { standard: { price: 2600, details: "8 thank you stems" }, deluxe: { price: 4100, details: "15 stems + thank you card" }, premium: { price: 6400, details: "25 stems + thank you gift" } } },
+        { name: "Miss You", description: "Missing you flowers", image: "SCREENSHOTS/PHOTO 72.jpg", category: "justbecause", sizes: { standard: { price: 2500, details: "8 miss you stems" }, deluxe: { price: 4000, details: "15 stems + miss you letter" }, premium: { price: 6200, details: "25 stems + miss you photo book" } } },
+        { name: "Congratulations", description: "Congrats on your achievement", image: "SCREENSHOTS/PHOTO 73.jpg", category: "justbecause", sizes: { standard: { price: 3200, details: "10 congrats stems" }, deluxe: { price: 5000, details: "18 stems + congrats card" }, premium: { price: 7800, details: "30 stems + trophy accent" } } },
+        { name: "Good Luck", description: "Good luck wishes", image: "SCREENSHOTS/PHOTO 74.jpg", category: "justbecause", sizes: { standard: { price: 2200, details: "6 luck stems" }, deluxe: { price: 3500, details: "12 stems + lucky charm" }, premium: { price: 5500, details: "20 stems + good luck set" } } },
+        { name: "Welcome Home", description: "Welcome them home", image: "SCREENSHOTS/PHOTO 75.jpg", category: "justbecause", sizes: { standard: { price: 3000, details: "8 welcome stems" }, deluxe: { price: 4700, details: "15 stems + welcome mat" }, premium: { price: 7300, details: "25 stems + home decor set" } } },
+        { name: "New Baby", description: "Welcome the new baby", image: "SCREENSHOTS/PHOTO 76.jpg", category: "justbecause", sizes: { standard: { price: 2800, details: "8 baby stems" }, deluxe: { price: 4400, details: "15 stems + baby card" }, premium: { price: 6900, details: "25 stems + baby gift set" } } },
+        { name: "Housewarming", description: "New home flowers", image: "SCREENSHOTS/PHOTO 77.jpg", category: "justbecause", sizes: { standard: { price: 3400, details: "10 house stems" }, deluxe: { price: 5300, details: "18 stems + housewarming card" }, premium: { price: 8200, details: "30 stems + home essentials" } } },
+        { name: "Anniversary", description: "Happy anniversary blooms", image: "SCREENSHOTS/PHOTO 78.jpg", category: "justbecause", sizes: { standard: { price: 3800, details: "10 anniversary stems" }, deluxe: { price: 6000, details: "18 stems + anniversary card" }, premium: { price: 9300, details: "30 stems + anniversary gift" } } },
+        { name: "Graduation", description: "Congrats grad flowers", image: "SCREENSHOTS/PHOTO 79.jpg", category: "justbecause", sizes: { standard: { price: 2700, details: "8 grad stems" }, deluxe: { price: 4300, details: "15 stems + grad cap" }, premium: { price: 6700, details: "25 stems + grad gift set" } } },
+        { name: "Appreciation", description: "Show your appreciation", image: "SCREENSHOTS/PHOTO 80.jpg", category: "justbecause", sizes: { standard: { price: 2900, details: "8 appreciation stems" }, deluxe: { price: 4600, details: "15 stems + appreciation card" }, premium: { price: 7200, details: "25 stems + appreciation gift" } } }
+    ],
+    water: [
+        { name: "Aqua Rose", description: "Roses in water tubes", image: "SCREENSHOTS/PHOTO 1.jpg", category: "water", sizes: { standard: { price: 2500, details: "6 roses in water vials" }, deluxe: { price: 4000, details: "12 roses in premium water tubes" }, premium: { price: 6200, details: "20 roses in luxury water arrangement" } } },
+        { name: "Water Lily Bliss", description: "Lilies floating in water", image: "SCREENSHOTS/PHOTO 2.jpg", category: "water", sizes: { standard: { price: 2800, details: "4 lilies in water bowl" }, deluxe: { price: 4500, details: "8 lilies + floating candles" }, premium: { price: 7000, details: "15 lilies + decorative water feature" } } },
+        { name: "Crystal Clear", description: "Clear water arrangement", image: "SCREENSHOTS/PHOTO 3.jpg", category: "water", sizes: { standard: { price: 2200, details: "6 stems in clear water" }, deluxe: { price: 3500, details: "12 stems + crystal vase" }, premium: { price: 5500, details: "20 stems + crystal water feature" } } },
+        { name: "Ocean Breeze", description: "Blue-toned water flowers", image: "SCREENSHOTS/PHOTO 4.jpg", category: "water", sizes: { standard: { price: 2600, details: "8 blue stems in water" }, deluxe: { price: 4200, details: "15 stems + ocean decor" }, premium: { price: 6500, details: "25 stems + ocean water feature" } } },
+        { name: "Floating Garden", description: "Garden floating on water", image: "SCREENSHOTS/PHOTO 5.jpg", category: "water", sizes: { standard: { price: 3000, details: "10 mixed stems floating" }, deluxe: { price: 4800, details: "18 stems + garden bowl" }, premium: { price: 7500, details: "30 stems + luxury water garden" } } },
+        { name: "Dew Drop", description: "Fresh as morning dew", image: "SCREENSHOTS/PHOTO 6.jpg", category: "water", sizes: { standard: { price: 2400, details: "6 dew-fresh stems" }, deluxe: { price: 3800, details: "12 stems + dew drop vase" }, premium: { price: 6000, details: "20 stems + morning dew set" } } },
+        { name: "Rain Dance", description: "Dancing in the rain", image: "SCREENSHOTS/PHOTO 7.jpg", category: "water", sizes: { standard: { price: 2700, details: "8 rain-colored stems" }, deluxe: { price: 4300, details: "15 stems + rain chain" }, premium: { price: 6700, details: "25 stems + rain fountain" } } },
+        { name: "River Flow", description: "Flowing like a river", image: "SCREENSHOTS/PHOTO 8.jpg", category: "water", sizes: { standard: { price: 2900, details: "8 flowing stems" }, deluxe: { price: 4600, details: "15 stems + river stones" }, premium: { price: 7200, details: "25 stems + river water feature" } } },
+        { name: "Spring Splash", description: "Spring water splash", image: "SCREENSHOTS/PHOTO 9.jpg", category: "water", sizes: { standard: { price: 2500, details: "6 spring stems" }, deluxe: { price: 4000, details: "12 stems + spring decor" }, premium: { price: 6200, details: "20 stems + spring water set" } } },
+        { name: "Tidal Wave", description: "Wave of beautiful blooms", image: "SCREENSHOTS/PHOTO 10.jpg", category: "water", sizes: { standard: { price: 3200, details: "10 wave stems" }, deluxe: { price: 5100, details: "18 stems + wave vase" }, premium: { price: 7900, details: "30 stems + tidal water feature" } } },
+        { name: "Misty Morning", description: "Misty water arrangement", image: "SCREENSHOTS/PHOTO 11.jpg", category: "water", sizes: { standard: { price: 2300, details: "6 misty stems" }, deluxe: { price: 3700, details: "12 stems + mist feature" }, premium: { price: 5800, details: "20 stems + misty water garden" } } },
+        { name: "Bubble Bloom", description: "Bubbling with flowers", image: "SCREENSHOTS/PHOTO 12.jpg", category: "water", sizes: { standard: { price: 2600, details: "8 bubble stems" }, deluxe: { price: 4200, details: "15 stems + bubble feature" }, premium: { price: 6500, details: "25 stems + bubble water garden" } } },
+        { name: "Poolside Beauty", description: "Perfect for poolside decor", image: "SCREENSHOTS/PHOTO 13.jpg", category: "water", sizes: { standard: { price: 2800, details: "8 poolside stems" }, deluxe: { price: 4500, details: "15 stems + pool float" }, premium: { price: 7000, details: "25 stems + poolside set" } } },
+        { name: "Cascade", description: "Cascading water flowers", image: "SCREENSHOTS/PHOTO 14.jpg", category: "water", sizes: { standard: { price: 3100, details: "10 cascade stems" }, deluxe: { price: 5000, details: "18 stems + cascade feature" }, premium: { price: 7800, details: "30 stems + waterfall feature" } } },
+        { name: "Aqua Dream", description: "Dreamy aqua arrangement", image: "SCREENSHOTS/PHOTO 15.jpg", category: "water", sizes: { standard: { price: 2700, details: "8 aqua stems" }, deluxe: { price: 4300, details: "15 stems + aqua decor" }, premium: { price: 6700, details: "25 stems + aqua dream set" } } },
+        { name: "Liquid Gold", description: "Golden water blooms", image: "SCREENSHOTS/PHOTO 16.jpg", category: "water", sizes: { standard: { price: 2900, details: "8 golden stems" }, deluxe: { price: 4600, details: "15 stems + gold water vase" }, premium: { price: 7200, details: "25 stems + liquid gold feature" } } },
+        { name: "Blue Lagoon", description: "Lagoon blue water flowers", image: "SCREENSHOTS/PHOTO 17.jpg", category: "water", sizes: { standard: { price: 3000, details: "10 lagoon stems" }, deluxe: { price: 4800, details: "18 stems + lagoon bowl" }, premium: { price: 7500, details: "30 stems + blue lagoon set" } } },
+        { name: "Waterfall", description: "Flowing waterfall blooms", image: "SCREENSHOTS/PHOTO 18.jpg", category: "water", sizes: { standard: { price: 3300, details: "10 waterfall stems" }, deluxe: { price: 5300, details: "18 stems + mini waterfall" }, premium: { price: 8200, details: "30 stems + waterfall feature" } } },
+        { name: "Pond Life", description: "Pond-inspired arrangement", image: "SCREENSHOTS/PHOTO 19.jpg", category: "water", sizes: { standard: { price: 2500, details: "6 pond stems" }, deluxe: { price: 4000, details: "12 stems + pond decor" }, premium: { price: 6200, details: "20 stems + mini pond set" } } },
+        { name: "Streamline", description: "Streamlined water beauty", image: "SCREENSHOTS/PHOTO 20.jpg", category: "water", sizes: { standard: { price: 2800, details: "8 streamline stems" }, deluxe: { price: 4500, details: "15 stems + stream vase" }, premium: { price: 7000, details: "25 stems + streamline water set" } } }
+    ],
+    events: [
+        { name: "Corporate Elegance", description: "Professional corporate arrangement", image: "SCREENSHOTS/PHOTO 21.jpg", category: "events", sizes: { standard: { price: 4500, details: "10 corporate stems" }, deluxe: { price: 7000, details: "18 stems + corporate branding" }, premium: { price: 11000, details: "30 stems + full corporate set" } } },
+        { name: "Wedding Bliss", description: "Perfect wedding centerpiece", image: "SCREENSHOTS/PHOTO 22.jpg", category: "events", sizes: { standard: { price: 5500, details: "12 wedding stems" }, deluxe: { price: 8500, details: "22 stems + wedding decor" }, premium: { price: 13000, details: "40 stems + full wedding package" } } },
+        { name: "Party Starter", description: "Get the party started", image: "SCREENSHOTS/PHOTO 23.jpg", category: "events", sizes: { standard: { price: 3500, details: "10 party stems" }, deluxe: { price: 5500, details: "18 stems + party decor" }, premium: { price: 8500, details: "30 stems + full party set" } } },
+        { name: "Gala Night", description: "Elegant gala arrangement", image: "SCREENSHOTS/PHOTO 24.jpg", category: "events", sizes: { standard: { price: 4800, details: "10 gala stems" }, deluxe: { price: 7500, details: "18 stems + gala lighting" }, premium: { price: 11500, details: "30 stems + gala luxury set" } } },
+        { name: "Conference", description: "Professional conference decor", image: "SCREENSHOTS/PHOTO 25.jpg", category: "events", sizes: { standard: { price: 4000, details: "8 conference stems" }, deluxe: { price: 6200, details: "15 stems + conference setup" }, premium: { price: 9600, details: "25 stems + full conference package" } } },
+        { name: "Bridal Shower", description: "Beautiful bridal shower blooms", image: "SCREENSHOTS/PHOTO 26.jpg", category: "events", sizes: { standard: { price: 3200, details: "8 bridal stems" }, deluxe: { price: 5000, details: "15 stems + bridal decor" }, premium: { price: 7800, details: "25 stems + bridal shower set" } } },
+        { name: "Baby Shower", description: "Sweet baby shower flowers", image: "SCREENSHOTS/PHOTO 27.jpg", category: "events", sizes: { standard: { price: 3000, details: "8 baby shower stems" }, deluxe: { price: 4700, details: "15 stems + baby decor" }, premium: { price: 7300, details: "25 stems + baby shower package" } } },
+        { name: "Graduation Party", description: "Celebrate the graduate", image: "SCREENSHOTS/PHOTO 28.jpg", category: "events", sizes: { standard: { price: 2800, details: "8 grad party stems" }, deluxe: { price: 4400, details: "15 stems + grad decor" }, premium: { price: 6900, details: "25 stems + grad party set" } } },
+        { name: "Anniversary Dinner", description: "Romantic anniversary setup", image: "SCREENSHOTS/PHOTO 29.jpg", category: "events", sizes: { standard: { price: 4200, details: "10 anniversary stems" }, deluxe: { price: 6500, details: "18 stems + romantic lighting" }, premium: { price: 10000, details: "30 stems + full anniversary package" } } },
+        { name: "Launch Event", description: "Product launch flowers", image: "SCREENSHOTS/PHOTO 30.jpg", category: "events", sizes: { standard: { price: 3800, details: "8 launch stems" }, deluxe: { price: 6000, details: "15 stems + launch branding" }, premium: { price: 9300, details: "25 stems + full launch package" } } },
+        { name: "Charity Gala", description: "Elegant charity event decor", image: "SCREENSHOTS/PHOTO 31.jpg", category: "events", sizes: { standard: { price: 5000, details: "10 charity stems" }, deluxe: { price: 7800, details: "18 stems + charity branding" }, premium: { price: 12000, details: "30 stems + charity luxury set" } } },
+        { name: "Birthday Bash", description: "Big birthday celebration", image: "SCREENSHOTS/PHOTO 32.jpg", category: "events", sizes: { standard: { price: 3500, details: "10 bash stems" }, deluxe: { price: 5500, details: "18 stems + bash decor" }, premium: { price: 8500, details: "30 stems + full bash package" } } },
+        { name: "Retirement", description: "Congratulations on retirement", image: "SCREENSHOTS/PHOTO 33.jpg", category: "events", sizes: { standard: { price: 3200, details: "8 retirement stems" }, deluxe: { price: 5000, details: "15 stems + retirement card" }, premium: { price: 7800, details: "25 stems + retirement gift set" } } },
+        { name: "Promotion", description: "Celebrate the promotion", image: "SCREENSHOTS/PHOTO 34.jpg", category: "events", sizes: { standard: { price: 3400, details: "8 promo stems" }, deluxe: { price: 5300, details: "15 stems + promo decor" }, premium: { price: 8200, details: "25 stems + promotion gift" } } },
+        { name: "Engagement", description: "She said yes flowers", image: "SCREENSHOTS/PHOTO 35.jpg", category: "events", sizes: { standard: { price: 4000, details: "10 engagement stems" }, deluxe: { price: 6200, details: "18 stems + engagement decor" }, premium: { price: 9600, details: "30 stems + engagement package" } } },
+        { name: "Reunion", description: "Family reunion blooms", image: "SCREENSHOTS/PHOTO 36.jpg", category: "events", sizes: { standard: { price: 3000, details: "8 reunion stems" }, deluxe: { price: 4700, details: "15 stems + reunion decor" }, premium: { price: 7300, details: "25 stems + reunion package" } } },
+        { name: "Award Night", description: "Award ceremony flowers", image: "SCREENSHOTS/PHOTO 37.jpg", category: "events", sizes: { standard: { price: 4500, details: "10 award stems" }, deluxe: { price: 7000, details: "18 stems + award podium decor" }, premium: { price: 10800, details: "30 stems + full award set" } } },
+        { name: "Fundraiser", description: "Support the cause with flowers", image: "SCREENSHOTS/PHOTO 38.jpg", category: "events", sizes: { standard: { price: 2800, details: "8 fundraiser stems" }, deluxe: { price: 4400, details: "15 stems + cause branding" }, premium: { price: 6900, details: "25 stems + fundraiser package" } } },
+        { name: "Holiday Party", description: "Festive holiday event decor", image: "SCREENSHOTS/PHOTO 39.jpg", category: "events", sizes: { standard: { price: 3200, details: "10 holiday stems" }, deluxe: { price: 5000, details: "18 stems + holiday decor" }, premium: { price: 7800, details: "30 stems + full holiday set" } } },
+        { name: "VIP Reception", description: "VIP treatment with flowers", image: "SCREENSHOTS/PHOTO 40.jpg", category: "events", sizes: { standard: { price: 4800, details: "10 VIP stems" }, deluxe: { price: 7500, details: "18 stems + VIP lounge decor" }, premium: { price: 11500, details: "30 stems + VIP luxury package" } } }
+    ],
+    boxed: [
+        { name: "Luxury Rose Box", description: "Roses in a luxury box", image: "SCREENSHOTS/PHOTO 41.jpg", category: "boxed", sizes: { standard: { price: 4500, details: "12 roses in box" }, deluxe: { price: 7000, details: "24 roses + satin lining" }, premium: { price: 10800, details: "36 roses + luxury velvet box" } } },
+        { name: "Glass Vase Elegance", description: "Elegant glass vase arrangement", image: "SCREENSHOTS/PHOTO 42.jpg", category: "boxed", sizes: { standard: { price: 3800, details: "8 stems in glass vase" }, deluxe: { price: 6000, details: "15 stems + designer vase" }, premium: { price: 9300, details: "25 stems + crystal vase" } } },
+        { name: "Heart Box", description: "Heart-shaped flower box", image: "SCREENSHOTS/PHOTO 43.jpg", category: "boxed", sizes: { standard: { price: 4000, details: "10 stems in heart box" }, deluxe: { price: 6200, details: "18 stems + heart-shaped box" }, premium: { price: 9600, details: "30 stems + luxury heart box" } } },
+        { name: "Round Bloom Box", description: "Round box full of blooms", image: "SCREENSHOTS/PHOTO 44.jpg", category: "boxed", sizes: { standard: { price: 3500, details: "10 stems in round box" }, deluxe: { price: 5500, details: "18 stems + round luxury box" }, premium: { price: 8500, details: "30 stems + designer round box" } } },
+        { name: "Square Perfection", description: "Perfectly squared arrangement", image: "SCREENSHOTS/PHOTO 45.jpg", category: "boxed", sizes: { standard: { price: 3700, details: "10 stems in square box" }, deluxe: { price: 5800, details: "18 stems + square acrylic box" }, premium: { price: 9000, details: "30 stems + luxury square box" } } },
+        { name: "Tall Vase", description: "Tall elegant vase flowers", image: "SCREENSHOTS/PHOTO 46.jpg", category: "boxed", sizes: { standard: { price: 3200, details: "8 stems in tall vase" }, deluxe: { price: 5000, details: "15 stems + tall designer vase" }, premium: { price: 7800, details: "25 stems + luxury tall vase" } } },
+        { name: "Mini Box", description: "Small but beautiful box", image: "SCREENSHOTS/PHOTO 47.jpg", category: "boxed", sizes: { standard: { price: 2200, details: "6 stems in mini box" }, deluxe: { price: 3500, details: "10 stems + mini luxury box" }, premium: { price: 5500, details: "18 stems + designer mini box" } } },
+        { name: "Gift Box", description: "Ready-to-gift flower box", image: "SCREENSHOTS/PHOTO 48.jpg", category: "boxed", sizes: { standard: { price: 3000, details: "8 stems in gift box" }, deluxe: { price: 4700, details: "15 stems + gift wrapping" }, premium: { price: 7300, details: "25 stems + luxury gift set" } } },
+        { name: "Acrylic Clear", description: "Clear acrylic box flowers", image: "SCREENSHOTS/PHOTO 49.jpg", category: "boxed", sizes: { standard: { price: 4200, details: "10 stems in acrylic box" }, deluxe: { price: 6500, details: "18 stems + clear acrylic case" }, premium: { price: 10000, details: "30 stems + luxury acrylic box" } } },
+        { name: "Velvet Box", description: "Soft velvet flower box", image: "SCREENSHOTS/PHOTO 50.jpg", category: "boxed", sizes: { standard: { price: 4000, details: "10 stems in velvet box" }, deluxe: { price: 6200, details: "18 stems + premium velvet" }, premium: { price: 9600, details: "30 stems + luxury velvet box" } } },
+        { name: "Ceramic Vase", description: "Handcrafted ceramic vase", image: "SCREENSHOTS/PHOTO 51.jpg", category: "boxed", sizes: { standard: { price: 3400, details: "8 stems in ceramic vase" }, deluxe: { price: 5300, details: "15 stems + artisan ceramic" }, premium: { price: 8200, details: "25 stems + designer ceramic" } } },
+        { name: "Wooden Box", description: "Rustic wooden flower box", image: "SCREENSHOTS/PHOTO 52.jpg", category: "boxed", sizes: { standard: { price: 3600, details: "10 stems in wooden box" }, deluxe: { price: 5600, details: "18 stems + carved wooden box" }, premium: { price: 8700, details: "30 stems + luxury wooden case" } } },
+        { name: "Mirror Box", description: "Mirror-bottom flower box", image: "SCREENSHOTS/PHOTO 53.jpg", category: "boxed", sizes: { standard: { price: 3800, details: "10 stems in mirror box" }, deluxe: { price: 6000, details: "18 stems + mirrored case" }, premium: { price: 9300, details: "30 stems + luxury mirror box" } } },
+        { name: "Gold Vase", description: "Gold-accented vase flowers", image: "SCREENSHOTS/PHOTO 54.jpg", category: "boxed", sizes: { standard: { price: 4100, details: "10 stems in gold vase" }, deluxe: { price: 6400, details: "18 stems + gold-plated vase" }, premium: { price: 9900, details: "30 stems + luxury gold set" } } },
+        { name: "Preserved Box", description: "Long-lasting preserved flowers", image: "SCREENSHOTS/PHOTO 55.jpg", category: "boxed", sizes: { standard: { price: 5000, details: "8 preserved stems" }, deluxe: { price: 7800, details: "15 preserved + display case" }, premium: { price: 12000, details: "25 preserved + luxury case" } } },
+        { name: "Terrarium", description: "Glass terrarium flowers", image: "SCREENSHOTS/PHOTO 56.jpg", category: "boxed", sizes: { standard: { price: 3300, details: "6 stems in terrarium" }, deluxe: { price: 5200, details: "12 stems + large terrarium" }, premium: { price: 8100, details: "20 stems + designer terrarium" } } },
+        { name: "Mason Jar", description: "Charming mason jar arrangement", image: "SCREENSHOTS/PHOTO 57.jpg", category: "boxed", sizes: { standard: { price: 2400, details: "6 stems in mason jar" }, deluxe: { price: 3800, details: "12 stems + decorated jar" }, premium: { price: 6000, details: "20 stems + mason jar set" } } },
+        { name: "Basket Vase", description: "Woven basket with vase insert", image: "SCREENSHOTS/PHOTO 58.jpg", category: "boxed", sizes: { standard: { price: 3100, details: "8 stems in basket vase" }, deluxe: { price: 4900, details: "15 stems + lined basket" }, premium: { price: 7600, details: "25 stems + luxury basket vase" } } },
+        { name: "Copper Vase", description: "Copper-toned vase flowers", image: "SCREENSHOTS/PHOTO 59.jpg", category: "boxed", sizes: { standard: { price: 3500, details: "8 stems in copper vase" }, deluxe: { price: 5500, details: "15 stems + hammered copper" }, premium: { price: 8500, details: "25 stems + designer copper" } } },
+        { name: "Marble Box", description: "Luxury marble flower box", image: "SCREENSHOTS/PHOTO 60.jpg", category: "boxed", sizes: { standard: { price: 4800, details: "10 stems in marble box" }, deluxe: { price: 7500, details: "18 stems + marble case" }, premium: { price: 11500, details: "30 stems + luxury marble set" } } }
+    ],
+    baskets: [
+        { name: "Woven Wonder", description: "Beautifully woven basket", image: "SCREENSHOTS/PHOTO 61.jpg", category: "baskets", sizes: { standard: { price: 3200, details: "10 stems in woven basket" }, deluxe: { price: 5000, details: "18 stems + lined basket" }, premium: { price: 7800, details: "30 stems + luxury woven basket" } } },
+        { name: "Rustic Charm", description: "Rustic woven charm", image: "SCREENSHOTS/PHOTO 62.jpg", category: "baskets", sizes: { standard: { price: 3000, details: "8 stems in rustic basket" }, deluxe: { price: 4700, details: "15 stems + rustic decor" }, premium: { price: 7300, details: "25 stems + full rustic set" } } },
+        { name: "Garden Basket", description: "Garden-fresh basket", image: "SCREENSHOTS/PHOTO 63.jpg", category: "baskets", sizes: { standard: { price: 2800, details: "8 garden stems" }, deluxe: { price: 4400, details: "15 stems + garden basket" }, premium: { price: 6900, details: "25 stems + garden gift set" } } },
+        { name: "Fruit & Flower", description: "Basket with fruits and flowers", image: "SCREENSHOTS/PHOTO 64.jpg", category: "baskets", sizes: { standard: { price: 3800, details: "6 stems + seasonal fruits" }, deluxe: { price: 6000, details: "12 stems + premium fruits" }, premium: { price: 9300, details: "20 stems + luxury fruit basket" } } },
+        { name: "Picnic Basket", description: "Perfect picnic companion", image: "SCREENSHOTS/PHOTO 65.jpg", category: "baskets", sizes: { standard: { price: 3400, details: "8 stems + picnic treats" }, deluxe: { price: 5300, details: "15 stems + full picnic set" }, premium: { price: 8200, details: "25 stems + luxury picnic basket" } } },
+        { name: "Gift Basket", description: "All-in-one gift basket", image: "SCREENSHOTS/PHOTO 66.jpg", category: "baskets", sizes: { standard: { price: 3600, details: "8 stems + small gifts" }, deluxe: { price: 5600, details: "15 stems + premium gifts" }, premium: { price: 8700, details: "25 stems + luxury gift set" } } },
+        { name: "Baby Basket", description: "Welcome baby basket", image: "SCREENSHOTS/PHOTO 67.jpg", category: "baskets", sizes: { standard: { price: 3100, details: "6 stems + baby items" }, deluxe: { price: 4900, details: "12 stems + baby essentials" }, premium: { price: 7600, details: "20 stems + full baby basket" } } },
+        { name: "Spa Basket", description: "Relaxing spa flower basket", image: "SCREENSHOTS/PHOTO 68.jpg", category: "baskets", sizes: { standard: { price: 3500, details: "8 stems + spa items" }, deluxe: { price: 5500, details: "15 stems + spa set" }, premium: { price: 8500, details: "25 stems + luxury spa basket" } } },
+        { name: "Chocolate Basket", description: "Flowers and chocolates basket", image: "SCREENSHOTS/PHOTO 69.jpg", category: "baskets", sizes: { standard: { price: 3300, details: "8 stems + chocolates" }, deluxe: { price: 5200, details: "15 stems + premium chocolates" }, premium: { price: 8100, details: "25 stems + luxury chocolate set" } } },
+        { name: "Wine & Flower", description: "Wine and flower combo", image: "SCREENSHOTS/PHOTO 70.jpg", category: "baskets", sizes: { standard: { price: 4200, details: "6 stems + wine bottle" }, deluxe: { price: 6500, details: "12 stems + premium wine" }, premium: { price: 10000, details: "20 stems + luxury wine set" } } },
+        { name: "Tea Time", description: "Tea and flower basket", image: "SCREENSHOTS/PHOTO 71.jpg", category: "baskets", sizes: { standard: { price: 2900, details: "6 stems + tea set" }, deluxe: { price: 4600, details: "12 stems + premium tea" }, premium: { price: 7200, details: "20 stems + luxury tea basket" } } },
+        { name: "Coffee Lover", description: "Coffee and flower basket", image: "SCREENSHOTS/PHOTO 72.jpg", category: "baskets", sizes: { standard: { price: 3100, details: "6 stems + coffee" }, deluxe: { price: 4900, details: "12 stems + gourmet coffee" }, premium: { price: 7600, details: "20 stems + coffee lover set" } } },
+        { name: "Pamper Basket", description: "Pamper me flower basket", image: "SCREENSHOTS/PHOTO 73.jpg", category: "baskets", sizes: { standard: { price: 3400, details: "8 stems + pamper items" }, deluxe: { price: 5300, details: "15 stems + pamper set" }, premium: { price: 8200, details: "25 stems + luxury pamper basket" } } },
+        { name: "Get Well", description: "Get well soon basket", image: "SCREENSHOTS/PHOTO 74.jpg", category: "baskets", sizes: { standard: { price: 3000, details: "8 stems + wellness items" }, deluxe: { price: 4700, details: "15 stems + wellness set" }, premium: { price: 7300, details: "25 stems + get well package" } } },
+        { name: "Housewarming", description: "New home basket", image: "SCREENSHOTS/PHOTO 75.jpg", category: "baskets", sizes: { standard: { price: 3200, details: "8 stems + home items" }, deluxe: { price: 5000, details: "15 stems + home essentials" }, premium: { price: 7800, details: "25 stems + luxury home set" } } },
+        { name: "Sympathy Basket", description: "Comforting sympathy basket", image: "SCREENSHOTS/PHOTO 76.jpg", category: "baskets", sizes: { standard: { price: 3500, details: "8 white stems + comfort items" }, deluxe: { price: 5500, details: "15 stems + sympathy set" }, premium: { price: 8500, details: "25 stems + comfort basket" } } },
+        { name: "Celebration", description: "Celebrate anything basket", image: "SCREENSHOTS/PHOTO 77.jpg", category: "baskets", sizes: { standard: { price: 3300, details: "8 celebration stems" }, deluxe: { price: 5200, details: "15 stems + celebration items" }, premium: { price: 8100, details: "25 stems + party basket" } } },
+        { name: "Romance Basket", description: "Romantic flower basket", image: "SCREENSHOTS/PHOTO 78.jpg", category: "baskets", sizes: { standard: { price: 3800, details: "10 romance stems" }, deluxe: { price: 6000, details: "18 stems + romance items" }, premium: { price: 9300, details: "30 stems + luxury romance set" } } },
+        { name: "Thank You", description: "Gratitude flower basket", image: "SCREENSHOTS/PHOTO 79.jpg", category: "baskets", sizes: { standard: { price: 2900, details: "8 thank you stems" }, deluxe: { price: 4600, details: "15 stems + gratitude items" }, premium: { price: 7200, details: "25 stems + thank you set" } } },
+        { name: "Luxury Hamper", description: "Ultimate luxury hamper", image: "SCREENSHOTS/PHOTO 80.jpg", category: "baskets", sizes: { standard: { price: 4500, details: "10 luxury stems + items" }, deluxe: { price: 7000, details: "18 stems + premium hamper" }, premium: { price: 10800, details: "30 stems + ultimate luxury hamper" } } }
+    ]
+};
+
+// Track selected sizes for folder products
+const folderSelectedSizes = {};
+
+// ===== FOLDER FUNCTIONS =====
+function openFolder(category) {
+    const folder = document.getElementById('folder-' + category);
+    const container = document.getElementById('folder-products-' + category);
+    const grid = folder.closest('.categories-grid');
+
+    // Close any open folder in the same grid
+    grid.querySelectorAll('.category-folder').forEach(f => {
+        f.classList.remove('expanded');
+    });
+    grid.classList.remove('has-expanded');
+
+    // Expand clicked folder
+    folder.classList.add('expanded');
+    grid.classList.add('has-expanded');
+
+    // Populate products if not already done
+    if (!container.dataset.populated) {
+        container.innerHTML = folderProducts[category].map((p, i) => {
+            const uniqueId = category + '_' + i;
+            folderSelectedSizes[uniqueId] = 'standard';
+            return `
+                <div class="folder-product-card">
+                    <img src="${p.image}" alt="${p.name}" class="folder-product-img" loading="lazy">
+                    <div class="folder-product-info">
+                        <span class="folder-product-category ${p.category}">${p.category}</span>
+                        <h3 class="folder-product-name">${p.name}</h3>
+                        <p class="folder-product-description">${p.description}</p>
+                        <div class="folder-size-options">
+                            <button class="folder-size-btn active" onclick="selectFolderSize(this, '${uniqueId}', 'standard')">Standard</button>
+                            <button class="folder-size-btn" onclick="selectFolderSize(this, '${uniqueId}', 'deluxe')">Deluxe</button>
+                            <button class="folder-size-btn" onclick="selectFolderSize(this, '${uniqueId}', 'premium')">Premium</button>
+                        </div>
+                        <div class="folder-size-details" id="folder-details-${uniqueId}"><strong>Standard:</strong> ${p.sizes.standard.details}</div>
+                        <div class="folder-product-footer">
+                            <div class="folder-product-price">KES <span id="folder-price-${uniqueId}">${p.sizes.standard.price.toLocaleString()}</span></div>
+                            <button class="folder-add-btn" onclick="addFolderProductToCart('${uniqueId}', '${p.name}', ${p.sizes.standard.price}, '${p.image}')">+ Add</button>
                         </div>
                     </div>
-                `).join('');
-                container.dataset.populated = 'true';
-            }
-            
-            // Scroll to folder
-            folder.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function closeFolder(category) {
-            const grid = document.getElementById('categoriesGrid');
-            const folder = document.getElementById('folder-' + category);
-            
-            folder.classList.remove('expanded');
-            grid.classList.remove('has-expanded');
-        }
-
-        // ===== CART FUNCTIONS =====
-        let cart = [];
-        
-        function addToCart(productId) {
-            const product = featuredProducts[productId];
-            const size = selectedSizes[productId] || 'standard';
-            const sizeData = product.sizes[size];
-            
-            const cartItem = {
-                id: productId,
-                name: product.name + ' (' + size.charAt(0).toUpperCase() + size.slice(1) + ')',
-                price: sizeData.price,
-                image: product.image,
-                quantity: 1
-            };
-            
-            const existingIndex = cart.findIndex(item => item.id === productId && item.name === cartItem.name);
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push(cartItem);
-            }
-            
-            updateCartUI();
-            
-            // Visual feedback
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '✓ Added';
-            btn.style.background = '#00A650';
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = '';
-            }, 1500);
-        }
-        
-        function addFolderProductToCart(name, price, image) {
-            const cartItem = {
-                id: 'folder_' + name.replace(/\s+/g, '_').toLowerCase(),
-                name: name,
-                price: price,
-                image: image,
-                quantity: 1
-            };
-            
-            const existingIndex = cart.findIndex(item => item.name === name);
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push(cartItem);
-            }
-            
-            updateCartUI();
-            
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '✓ Added';
-            btn.style.background = '#00A650';
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = '';
-            }, 1500);
-        }
-        
-        function updateCartUI() {
-            const cartCount = document.getElementById('cartCount');
-            const cartItemsMini = document.getElementById('cartItemsMini');
-            const cartTotalMini = document.getElementById('cartTotalMini');
-            
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            if (cart.length === 0) {
-                cartItemsMini.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem 0;">Your cart is empty</p>';
-                cartTotalMini.textContent = 'KES 0';
-                return;
-            }
-            
-            cartItemsMini.innerHTML = cart.map(item => `
-                <div class="cart-item-mini">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">KES ${item.price.toLocaleString()} x ${item.quantity}</div>
-                    </div>
                 </div>
-            `).join('');
-            
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotalMini.textContent = 'KES ' + total.toLocaleString();
-        }
-        
-        function toggleCart(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById('cartDropdown');
-            dropdown.classList.toggle('active');
-        }
-        
-        document.addEventListener('click', function(event) {
-            const cartIcon = document.querySelector('.cart-icon');
-            const dropdown = document.getElementById('cartDropdown');
-            if (!cartIcon.contains(event.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-        
-        function checkoutWhatsApp() {
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
-                return;
-            }
-            
-            let message = "Hi The Don Flowers! I'd like to place an order:\\n\\n";
-            let total = 0;
-            
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.name} - KES ${item.price.toLocaleString()} x ${item.quantity}\\n`;
-                total += item.price * item.quantity;
-            });
-            
-            message += `\\nTotal: KES ${total.toLocaleString()}\\n\\nPlease confirm availability. Thank you!`;
-            
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/254700354081?text=${encodedMessage}`, '_blank');
-        }
+            `;
+        }).join('');
+        container.dataset.populated = 'true';
+    }
 
-        function processMpesa() {
-            const phone = document.getElementById('mpesa-phone').value;
-            if (!phone || phone.length < 10) {
-                alert('Please enter a valid M-Pesa number (07XX XXX XXX)');
-                return;
-            }
-            alert(`M-Pesa STK Push sent to ${phone}\\n\\nPlease check your phone and enter your PIN to complete payment.`);
+    // Scroll to folder
+    folder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeFolder(category) {
+    const folder = document.getElementById('folder-' + category);
+    const grid = folder.closest('.categories-grid');
+
+    folder.classList.remove('expanded');
+    grid.classList.remove('has-expanded');
+}
+
+function selectFolderSize(btn, productId, size) {
+    const card = btn.closest('.folder-product-card');
+    const buttons = card.querySelectorAll('.folder-size-btn');
+
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    folderSelectedSizes[productId] = size;
+
+    // Find product data
+    const cat = productId.split('_')[0];
+    const idx = parseInt(productId.split('_')[1]);
+    const product = folderProducts[cat][idx];
+    const sizeData = product.sizes[size];
+
+    const priceElement = card.querySelector('.folder-product-price span');
+    priceElement.style.opacity = '0';
+    setTimeout(() => {
+        priceElement.textContent = sizeData.price.toLocaleString();
+        priceElement.style.opacity = '1';
+    }, 200);
+
+    const detailsElement = card.querySelector('.folder-size-details');
+    detailsElement.innerHTML = `<strong>${size.charAt(0).toUpperCase() + size.slice(1)}:</strong> ${sizeData.details}`;
+
+    // Update add button onclick
+    const addBtn = card.querySelector('.folder-add-btn');
+    addBtn.setAttribute('onclick', `addFolderProductToCart('${productId}', '${product.name}', ${sizeData.price}, '${product.image}')`);
+}
+
+// ===== CART FUNCTIONS =====
+let cart = [];
+
+function addToCart(productId) {
+    const product = featuredProducts[productId];
+    const size = selectedSizes[productId] || 'standard';
+    const sizeData = product.sizes[size];
+
+    const cartItem = {
+        id: productId,
+        name: product.name + ' (' + size.charAt(0).toUpperCase() + size.slice(1) + ')',
+        price: sizeData.price,
+        image: product.image,
+        quantity: 1
+    };
+
+    const existingIndex = cart.findIndex(item => item.id === productId && item.name === cartItem.name);
+    if (existingIndex > -1) {
+        cart[existingIndex].quantity += 1;
+    } else {
+        cart.push(cartItem);
+    }
+
+    updateCartUI();
+
+    // Visual feedback
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✓ Added';
+    btn.style.background = '#00A650';
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+    }, 1500);
+}
+
+function addFolderProductToCart(uniqueId, name, price, image) {
+    const size = folderSelectedSizes[uniqueId] || 'standard';
+    const cartItem = {
+        id: uniqueId,
+        name: name + ' (' + size.charAt(0).toUpperCase() + size.slice(1) + ')',
+        price: price,
+        image: image,
+        quantity: 1
+    };
+
+    const existingIndex = cart.findIndex(item => item.id === uniqueId && item.name === cartItem.name);
+    if (existingIndex > -1) {
+        cart[existingIndex].quantity += 1;
+    } else {
+        cart.push(cartItem);
+    }
+
+    updateCartUI();
+
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✓ Added';
+    btn.style.background = '#00A650';
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+    }, 1500);
+}
+
+function updateCartUI() {
+    const cartCount = document.getElementById('cartCount');
+    const cartItemsMini = document.getElementById('cartItemsMini');
+    const cartTotalMini = document.getElementById('cartTotalMini');
+
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.textContent = totalItems;
+
+    if (cart.length === 0) {
+        cartItemsMini.innerHTML = '<p style="color: #999; text-align: center; padding: 2rem 0;">Your cart is empty</p>';
+        cartTotalMini.textContent = 'KES 0';
+        return;
+    }
+
+    cartItemsMini.innerHTML = cart.map((item, index) => `
+        <div class="cart-item-mini">
+            <img src="${item.image}" alt="${item.name}" loading="lazy">
+            <div class="cart-item-info">
+                <div class="cart-item-name">${item.name}</div>
+                <div class="cart-item-price">KES ${item.price.toLocaleString()}</div>
+                <div class="cart-item-qty">
+                    <button class="qty-btn" onclick="updateCartQty(${index}, -1)">−</button>
+                    <span>${item.quantity}</span>
+                    <button class="qty-btn" onclick="updateCartQty(${index}, 1)">+</button>
+                    <button class="qty-btn remove" onclick="removeCartItem(${index})">✕</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    cartTotalMini.textContent = 'KES ' + total.toLocaleString();
+}
+
+function updateCartQty(index, change) {
+    cart[index].quantity += change;
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+    updateCartUI();
+}
+
+function removeCartItem(index) {
+    cart.splice(index, 1);
+    updateCartUI();
+}
+
+
+function toggleCart(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('cartDropdown');
+    dropdown.classList.toggle('active');
+}
+
+document.addEventListener('click', function(event) {
+    const cartIcon = document.querySelector('.cart-icon');
+    const dropdown = document.getElementById('cartDropdown');
+    if (!cartIcon.contains(event.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+function showCheckoutForm() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    document.getElementById('checkoutForm').classList.add('active');
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkoutDate').min = today;
+}
+
+function hideCheckoutForm() {
+    document.getElementById('checkoutForm').classList.remove('active');
+}
+
+function submitCheckout() {
+    const name = document.getElementById('checkoutName').value.trim();
+    const phone = document.getElementById('checkoutPhone').value.trim();
+    const county = document.getElementById('checkoutCounty').value;
+    const location = document.getElementById('checkoutLocation').value.trim();
+    const date = document.getElementById('checkoutDate').value;
+    const time = document.getElementById('checkoutTime').value;
+    const notes = document.getElementById('checkoutNotes').value.trim();
+
+    if (!name || !phone || !county || !location || !date) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    let message = `Hi The Don Flowers! I'd like to place an order:\n\n`;
+    message += `*Customer:* ${name}\n`;
+    message += `*Phone:* ${phone}\n`;
+    message += `*Delivery:* ${location}, ${county}\n`;
+    message += `*Date:* ${date} | *Time:* ${time}\n`;
+    if (notes) message += `*Notes:* ${notes}\n`;
+    message += `\n*Order Items:*\n`;
+
+    let total = 0;
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} - KES ${item.price.toLocaleString()} x ${item.quantity}\n`;
+        total += item.price * item.quantity;
+    });
+
+    message += `\n*Total: KES ${total.toLocaleString()}*\n\nPlease confirm availability. Thank you!`;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/254700354081?text=${encodedMessage}`, '_blank');
+}
+
+function checkoutWhatsApp() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
+    let message = "Hi The Don Flowers! I'd like to place an order:\n\n";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name} - KES ${item.price.toLocaleString()} x ${item.quantity}\n`;
+        total += item.price * item.quantity;
+    });
+
+    message += `\nTotal: KES ${total.toLocaleString()}\n\nPlease confirm availability. Thank you!`;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/254700354081?text=${encodedMessage}`, '_blank');
+}
+
+// ===== FEATURED PRODUCTS DATA =====
+const featuredProducts = {
+    1: {
+        name: "Classic Red Roses",
+        image: "SCREENSHOTS/PHOTO 73.jpg",
+        sizes: {
+            standard: { price: 3500, details: "12 stems + basic wrapping" },
+            deluxe: { price: 5500, details: "24 stems + premium wrapping + greenery" },
+            premium: { price: 8500, details: "36 stems + luxury box + chocolates" }
         }
-
-        // ===== FEATURED PRODUCTS DATA =====
-        const featuredProducts = {
-            1: {
-                name: "Classic Red Roses",
-                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
-                sizes: {
-                    standard: { price: 3500, details: "12 stems + basic wrapping" },
-                    deluxe: { price: 5500, details: "24 stems + premium wrapping + greenery" },
-                    premium: { price: 8500, details: "36 stems + luxury box + chocolates" }
-                }
-            },
-            2: {
-                name: "Sunshine Mix",
-                image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?w=600&auto=format&fit=crop&q=80",
-                sizes: {
-                    standard: { price: 2800, details: "5 sunflowers + 3 gerberas" },
-                    deluxe: { price: 4500, details: "8 sunflowers + 5 gerberas + roses" },
-                    premium: { price: 7200, details: "12 sunflowers + mixed blooms + vase" }
-                }
-            },
-            3: {
-                name: "White Elegance",
-                image: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&auto=format&fit=crop&q=80",
-                sizes: {
-                    standard: { price: 4200, details: "6 white lilies + 6 roses" },
-                    deluxe: { price: 6500, details: "12 lilies + 12 roses + greenery" },
-                    premium: { price: 9500, details: "18 lilies + 18 roses + premium vase" }
-                }
-            },
-            4: {
-                name: "Pastel Dreams",
-                image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&auto=format&fit=crop&q=80",
-                sizes: {
-                    standard: { price: 3200, details: "10 mixed stems + greenery" },
-                    deluxe: { price: 5200, details: "20 mixed stems + premium wrapping" },
-                    premium: { price: 7800, details: "30+ stems + luxury arrangement" }
-                }
-            },
-            5: {
-                name: "Pink Passion",
-                image: "https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=600&auto=format&fit=crop&q=80",
-                sizes: {
-                    standard: { price: 4800, details: "10 pink roses + 2 orchids" },
-                    deluxe: { price: 7200, details: "20 roses + 5 orchids + peonies" },
-                    premium: { price: 11000, details: "30+ roses + orchids + luxury box" }
-                }
-            },
-            6: {
-                name: "Tropical Burst",
-                image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&auto=format&fit=crop&q=80",
-                sizes: {
-                    standard: { price: 5500, details: "3 birds + 3 anthuriums" },
-                    deluxe: { price: 8500, details: "6 birds + 6 anthuriums + foliage" },
-                    premium: { price: 12500, details: "10+ tropicals + ceramic vase" }
-                }
-            }
-        };
-
-        const selectedSizes = {};
-        Object.keys(featuredProducts).forEach(id => {
-            selectedSizes[id] = 'standard';
-        });
-
-        function selectSize(btn, productId, size) {
-            const card = btn.closest('.product-card');
-            const buttons = card.querySelectorAll('.size-btn');
-            
-            buttons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            selectedSizes[productId] = size;
-            
-            const product = featuredProducts[productId];
-            const sizeData = product.sizes[size];
-            
-            const priceElement = card.querySelector('.price-display');
-            priceElement.style.opacity = '0';
-            setTimeout(() => {
-                priceElement.textContent = sizeData.price.toLocaleString();
-                priceElement.style.opacity = '1';
-            }, 200);
-            
-            const detailsElement = card.querySelector('.size-details');
-            detailsElement.innerHTML = `<strong>${size.charAt(0).toUpperCase() + size.slice(1)}:</strong> ${sizeData.details}`;
+    },
+    2: {
+        name: "Sunshine Mix",
+        image: "SCREENSHOTS/PHOTO 6.jpg",
+        sizes: {
+            standard: { price: 2800, details: "5 sunflowers + 3 gerberas" },
+            deluxe: { price: 4500, details: "8 sunflowers + 5 gerberas + roses" },
+            premium: { price: 7200, details: "12 sunflowers + mixed blooms + vase" }
         }
+    },
+    3: {
+        name: "White Elegance",
+        image: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=600&auto=format&fit=crop&q=80",
+        sizes: {
+            standard: { price: 4200, details: "6 white lilies + 6 roses" },
+            deluxe: { price: 6500, details: "12 lilies + 12 roses + greenery" },
+            premium: { price: 9500, details: "18 lilies + 18 roses + premium vase" }
+        }
+    },
+    4: {
+        name: "Pastel Dreams",
+        image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600&auto=format&fit=crop&q=80",
+        sizes: {
+            standard: { price: 3200, details: "10 mixed stems + greenery" },
+            deluxe: { price: 5200, details: "20 mixed stems + premium wrapping" },
+            premium: { price: 7800, details: "30+ stems + luxury arrangement" }
+        }
+    },
+    5: {
+        name: "Pink Passion",
+        image: "https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=600&auto=format&fit=crop&q=80",
+        sizes: {
+            standard: { price: 4800, details: "10 pink roses + 2 orchids" },
+            deluxe: { price: 7200, details: "20 roses + 5 orchids + peonies" },
+            premium: { price: 11000, details: "30+ roses + orchids + luxury box" }
+        }
+    },
+    6: {
+        name: "Tropical Burst",
+        image: "https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=600&auto=format&fit=crop&q=80",
+        sizes: {
+            standard: { price: 5500, details: "3 birds + 3 anthuriums" },
+            deluxe: { price: 8500, details: "6 birds + 6 anthuriums + foliage" },
+            premium: { price: 12500, details: "10+ tropicals + ceramic vase" }
+        }
+    }
+};
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+const selectedSizes = {};
+Object.keys(featuredProducts).forEach(id => {
+    selectedSizes[id] = 'standard';
+});
+
+function selectSize(btn, productId, size) {
+    const card = btn.closest('.product-card');
+    const buttons = card.querySelectorAll('.size-btn');
+
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    selectedSizes[productId] = size;
+
+    const product = featuredProducts[productId];
+    const sizeData = product.sizes[size];
+
+    const priceElement = card.querySelector('.price-display');
+    priceElement.style.opacity = '0';
+    setTimeout(() => {
+        priceElement.textContent = sizeData.price.toLocaleString();
+        priceElement.style.opacity = '1';
+    }, 200);
+
+    const detailsElement = card.querySelector('.size-details');
+    detailsElement.innerHTML = `<strong>${size.charAt(0).toUpperCase() + size.slice(1)}:</strong> ${sizeData.details}`;
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
     </script>
 </body>
 </html>
